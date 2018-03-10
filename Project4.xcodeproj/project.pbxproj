@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		35D15E0E2053A5C6008F5FBA /* testMyHash.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35D15E0D2053A5C6008F5FBA /* testMyHash.cpp */; };
 		35D15E112053B40E008F5FBA /* WordList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35D15E102053B40E008F5FBA /* WordList.cpp */; };
 /* End PBXBuildFile section */
 
@@ -25,8 +24,8 @@
 
 /* Begin PBXFileReference section */
 		35BE1FDC2050B10E00818D3E /* Project4 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Project4; sourceTree = BUILT_PRODUCTS_DIR; };
-		35D15E0D2053A5C6008F5FBA /* testMyHash.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = testMyHash.cpp; sourceTree = "<group>"; };
 		35D15E102053B40E008F5FBA /* WordList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WordList.cpp; sourceTree = "<group>"; };
+		35D8C79B2054822D00D30128 /* MyHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyHash.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,7 +58,7 @@
 		35BE1FDE2050B10E00818D3E /* Project4 */ = {
 			isa = PBXGroup;
 			children = (
-				35D15E0D2053A5C6008F5FBA /* testMyHash.cpp */,
+				35D8C79B2054822D00D30128 /* MyHash.h */,
 				35D15E102053B40E008F5FBA /* WordList.cpp */,
 			);
 			path = Project4;
@@ -122,7 +121,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35D15E0E2053A5C6008F5FBA /* testMyHash.cpp in Sources */,
 				35D15E112053B40E008F5FBA /* WordList.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

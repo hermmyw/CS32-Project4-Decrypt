@@ -1,26 +1,59 @@
 #include "provided.h"
+#include "MyHash.h"
 #include <string>
 #include <vector>
 #include <functional>
+#include <fstream>
+#include <iostream>
+#include <cassert>
 using namespace std;
 
 class WordListImpl
 {
 public:
+    WordListImpl();
     bool loadWordList(string filename);
     bool contains(string word) const;
     vector<string> findCandidates(string cipherWord, string currTranslation) const;
 private:
+    // Key: word; Value: pattern
+    MyHash<string, string> m_wordPatterList;
 };
+
+WordListImpl::WordListImpl()
+:m_wordPatterList()
+{ }
 
 bool WordListImpl::loadWordList(string filename)
 {
-    return false;  // This compiles, but may not be correct
+    if (m_wordPatterList.getNumItems() != 0)
+        m_wordPatterList.reset();
+    ifstream infile(filename);
+    if(!infile)
+    {
+        cerr << "Cannot open " << filename << endl;
+        return false;
+    }
+    
+    string s;
+    while (getline(infile, s))
+    {
+//        unsigned int hash(const string& s);
+//        int bucket = hash(s) % NUM_BUCK;
+        m_wordPatterList.associate(s, "");
+    }
+    cerr << m_wordPatterList.getNumItems() << endl;
+    return true;
+    
 }
 
 bool WordListImpl::contains(string word) const
 {
-    return false; // This compiles, but may not be correct
+    for (int i = 0; i < word.size(); i++)
+        word[i] = tolower(word[i]);
+    if (m_wordPatterList.find(word) != nullptr)
+        return true;
+    return false;
 }
 
 vector<string> WordListImpl::findCandidates(string cipherWord, string currTranslation) const
@@ -73,4 +106,16 @@ bool WordList::contains(string word) const
 vector<string> WordList::findCandidates(string cipherWord, string currTranslation) const
 {
    return m_impl->findCandidates(cipherWord, currTranslation);
+}
+
+
+
+
+const string FILENAME = "/Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/wordlist.txt";
+int main()
+{
+    WordList w;
+    w.loadWordList(FILENAME);
+    assert(w.contains("ABDuctors"));
+    return 0;
 }

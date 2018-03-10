@@ -5,7 +5,8 @@
 #ifndef MYHASH_INCLUDED
 #define MYHASH_INCLUDED
 
-#include <functional>
+#include <iostream>
+#include <cassert>
 #include <string>
 using namespace std;
 
@@ -21,58 +22,63 @@ public:
     void associate(const KeyType& key, const ValueType& value);
     int getNumItems() const;
     double getLoadFactor() const;
-
-      // for a map that can't be modified, return a pointer to const ValueType
+    
+    // for a map that can't be modified, return a pointer to const ValueType
     const ValueType* find(const KeyType& key) const;
-
-      // for a modifiable map, return a pointer to modifiable ValueType
+    
+    // for a modifiable map, return a pointer to modifiable ValueType
     ValueType* find(const KeyType& key)
     {
         return const_cast<ValueType*>(const_cast<const MyHash*>(this)->find(key));
     }
-
-      // C++11 syntax for preventing copying and assignment
+    
+    // C++11 syntax for preventing copying and assignment
     MyHash(const MyHash&) = delete;
     MyHash& operator=(const MyHash&) = delete;
-
+    
 private:
+    // An open hash table:
+    // Buckets: Key, pointer to the values
+    // Nodes: Value, pointer to the next node
     struct Node
     {
-        KeyType key;
         ValueType value;
+        KeyType key;
         Node* next;
     };
+    //    struct Bucket
+    //    {
+    //        Node* head;
+    //    };
     
-    struct Bucket
-    {
-        int slot;
-        Node* m_head;
-    };
-
+    
     int m_size;
     int m_nItems;
     double m_maxLF;
-    Bucket* m_buckets;
+    Node** m_buckets;
+    void resizeArray();
     void swap(MyHash& mh1, MyHash& mh2);
 };
 
 template<typename KeyType, typename ValueType>
 MyHash<KeyType, ValueType>::MyHash(double maxLoadFactor)
+:m_maxLF(maxLoadFactor), m_size(NUM_BUCK), m_nItems(0)
 {
-    m_maxLF = maxLoadFactor;
     if (maxLoadFactor <= 0)
         m_maxLF = 0.5;
-    else if (maxLoadFactor > 2)
+    else if (maxLoadFactor > 2.0)
         m_maxLF = 2.0;
-    m_size = NUM_BUCK;
-    m_nItems = 0;
-    m_buckets = new Bucket[NUM_BUCK];
+    m_buckets = new Node*[NUM_BUCK];
+    for (int i = 0; i < NUM_BUCK; i++)
+    {
+        m_buckets[i] = nullptr;
+    }
 }
 
 template<typename KeyType, typename ValueType>
 MyHash<KeyType, ValueType>::~MyHash()
 {
-    delete [] m_buckets;
+    cerr << "MyHash Destructor" << endl;
 }
 
 template<typename KeyType, typename ValueType>
@@ -80,49 +86,163 @@ void MyHash<KeyType, ValueType>::reset()
 {
     MyHash<KeyType, ValueType>* temp = new MyHash(getLoadFactor());
     swap(*this, *temp);
+    //    for (int i = 0; i < m_size; i++)
+    //        cerr << m_buckets[i] << " " << i << endl;
+    cerr << "temp: ";
     delete temp;
 }
 
 template <class KeyType, class ValueType>
 void MyHash<KeyType, ValueType>::associate(const KeyType& key, const ValueType& value)
 {
+    cerr << "Enter associate" << endl;
+    // Create a new node for the new key and value
     Node* n = new Node;
-    n->key = key;
     n->value = value;
+    n->key = key;
     n->next = nullptr;
+    
+    // Find the bucket that the key corresponds to
     unsigned int hash(const KeyType& key);
-    int bucket = hash(key);
-    Node* p = m_buckets[bucket].m_head;
-    while(p != nullptr && p->next != nullptr)
-        p = p->next;
-    p->next = n;
+    unsigned int bucket = hash(key) % m_size;
+    cerr << bucket << endl;
+    
+    // Look at the linked list in the bucket
+    Node* p = new Node;
+    p = m_buckets[bucket];
+    cerr << p << endl;
+    cerr << "Key: " << n->key << "  Value: " << n->value << " Bucket" << bucket << endl;
+    if (p == nullptr)
+    {
+        // If the bucket has never been used,
+        // Assign the bucket to the new node
+        m_buckets[bucket] = n;
+        cerr << "ADD NEW" << endl;
+    }
+    else
+    {
+        while(p != nullptr)
+        {
+            if (p->key == key)
+            {
+                p->value = value;
+                delete n;
+                cerr << "UPDATE" << endl << "Leave associate" << endl << endl;
+                return;
+            }
+            p = p->next;
+        }
+        n->next = m_buckets[bucket];
+        m_buckets[bucket] = n;
+        cerr << "ADD" << endl;
+    }
     m_nItems++;
+    
     if (getLoadFactor() > m_maxLF)
     {
+        cerr << "******Exceeds Max Load factor******" << endl << endl;
         // allocate new bigger dynamic array
-        Bucket* temp = m_buckets;
-        m_buckets = new Bucket[2 * NUM_BUCK];
-        delete [] temp;
+        resizeArray();
+        //        for (int i = 0; i < m_size; i++)
+        //            cerr << m_buckets[i] << " " << i << endl;
     }
-    
+    cerr << "Leave associate" << endl << endl;
 }
 
+template <class KeyType, class ValueType>
+void MyHash<KeyType, ValueType>::resizeArray()
+{
+    cerr << "Resizing" << endl;
+    Node** temp = m_buckets;
+    m_buckets = new Node* [2 * m_size];
+    for (int i = 0; i < 2 * m_size; i++)
+        m_buckets[i] = nullptr;
+    //    for (int i = 0; i < 2 * m_size; i++)
+    //        cerr << m_buckets[i] << " " << i << endl;
+    //    for (int i = 0; i < m_size; i++)
+    //        cerr << temp[i] << " " << i << endl;
+    
+    for (int i = 0; i < m_size; i++)
+    {
+        if (temp[i] != nullptr)
+        {
+            KeyType tempK = temp[i]->key;
+            ValueType tempV = temp[i]->value;
+            
+            // Get the node ready to be added
+            Node* n = new Node;
+            n->value = tempV;
+            n->key = tempK;
+            n->next = nullptr;
+            
+            // find out where the target bucket is in newArray
+            unsigned int hash(const KeyType& key);
+            unsigned int bucket = hash(tempK) % (2 * m_size);
+            cerr << "Key: " << tempK << ". Value: " << tempV << ". At the new bucket: " << bucket << endl;
+            
+            Node* p = new Node;
+            p = m_buckets[bucket];
+            cerr << p << endl;
+            if (p == nullptr)
+            {
+                // If the bucket has never been used,
+                // Assign the bucket to the new node
+                m_buckets[bucket] = n;
+                cerr << "New Array: ADD NEW" << endl;
+            }
+            else
+            {
+                while(p != nullptr)
+                {
+                    if (p->key == tempK)
+                    {
+                        p->value = tempV;
+                        n = nullptr;
+                        cerr << "New Array: UPDATE" << endl;
+                        break;
+                    }
+                    p = p->next;
+                }
+                if (n != nullptr)
+                {
+                    n->next = m_buckets[i];
+                    m_buckets[i] = n;
+                }
+                else
+                    delete n;
+                cerr << "New Array: ADD" << endl;
+            }
+        }
+    }
+    
+    //    for (int i = 0; i < 2 * m_size; i++)
+    //    {
+    //        if (m_buckets[i] == nullptr)
+    //            cerr << "Empty Bucket at " << i << endl;
+    //        else
+    //            cerr << "Key: " << m_buckets[i]->key << endl << "  Value:" << m_buckets[i]->value << endl;
+    //    }
+    //    cerr << "New load factor " << (m_nItems * 1.0 / (2 * m_size)) << endl;
+    m_size *= 2;
+    //    cerr << "New size " << m_size << endl;
+    delete [] temp;
+    cerr << "*****Finish Resizing******" << endl << endl;
+}
 
 template <class KeyType, class ValueType>
 const ValueType* MyHash<KeyType, ValueType>::find(const KeyType& key) const
 {
-    ValueType* vp = new ValueType;
     unsigned int hash(const KeyType& key);
-    int bucket = hash(key);
-    Node* p = m_buckets[bucket]->m_head;
+    unsigned int bucket = hash(key) % m_size;
+    Node* p = m_buckets[bucket];
     while (p != nullptr)
     {
         if  (p->key == key)
-            vp = &(p->value);
+            return &(p->value);
         else
             p = p->next;
     }
-    vp = nullptr;
+    return nullptr;
 }
 
 // template <class KeyType, class ValueType>
@@ -151,16 +271,16 @@ int MyHash<KeyType, ValueType>::getNumItems() const
 template <class KeyType, class ValueType>
 double MyHash<KeyType, ValueType>::getLoadFactor() const
 {
-    return (m_nItems * 1.0 / NUM_BUCK);
+    return (m_nItems * 1.0 / m_size);
 }
 
 template <class KeyType, class ValueType>
 void MyHash<KeyType, ValueType>::swap(MyHash<KeyType, ValueType>& mh1, MyHash<KeyType, ValueType>& mh2)
 {
     // swap everything
-    Bucket* tempB = mh1.m_buckets;
+    Node** tempNode = mh1.m_buckets;
     mh1.m_buckets = mh2.m_buckets;
-    mh2.m_buckets = tempB;
+    mh2.m_buckets = tempNode;
     
     int tempS = mh1.m_size;
     mh1.m_size = mh2.m_size;
@@ -174,7 +294,6 @@ void MyHash<KeyType, ValueType>::swap(MyHash<KeyType, ValueType>& mh1, MyHash<Ke
     mh1.m_maxLF = mh2.m_maxLF;
     mh2.m_maxLF = tempM;
 }
-
 
 #endif
 
