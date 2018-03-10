@@ -37,24 +37,28 @@ public:
     MyHash(const MyHash&) = delete;
     MyHash& operator=(const MyHash&) = delete;
     
-private:
+
+    // An open hash table:
+    // Buckets: Key, pointer to the values
+    // Nodes: Value, pointer to the next node
     struct Node
     {
-        KeyType key;
         ValueType value;
+        KeyType key;
         Node* next;
     };
-    struct Bucket
-    {
-        Node* m_head;
-        int m_slot;
-    };
+//    struct Bucket
+//    {
+//        Node* head;
+//    };
     
     int m_size;
     int m_nItems;
     double m_maxLF;
-    Bucket m_buckets[NUM_BUCK];
+    Node** m_buckets;
+    void resizeArray(Node** oldArray, int n);
     void swap(MyHash& mh1, MyHash& mh2);
+    private:
 };
 
 template<typename KeyType, typename ValueType>
@@ -67,11 +71,13 @@ MyHash<KeyType, ValueType>::MyHash(double maxLoadFactor)
         m_maxLF = 2.0;
     m_size = NUM_BUCK;
     m_nItems = 0;
+    m_buckets = new Node*[NUM_BUCK];
 }
 
 template<typename KeyType, typename ValueType>
 MyHash<KeyType, ValueType>::~MyHash()
 {
+    cerr << "MyHash Destructor" << endl;
 }
 
 template<typename KeyType, typename ValueType>
@@ -85,42 +91,101 @@ void MyHash<KeyType, ValueType>::reset()
 template <class KeyType, class ValueType>
 void MyHash<KeyType, ValueType>::associate(const KeyType& key, const ValueType& value)
 {
+    cerr << "Enter associate" << endl;
+    // Create a new node for the new key and value
     Node* n = new Node;
-    n->key = key;
     n->value = value;
+    n->key = key;
     n->next = nullptr;
     
-    // find the bucket
+    // Find the bucket that the key corresponds to
     unsigned int hash(const KeyType& key);
     int bucket = hash(key) % NUM_BUCK;
+    cerr << bucket << endl;
     
-    if (bucket >= NUM_BUCK)
+    // Look at the linked list in the bucket
+    Node* p = m_buckets[bucket];
+    cerr << p << endl;
+    if (p == nullptr)
     {
-        cerr << "the bucket number is too big " << bucket << endl;
-        exit(5);
-    }
-    
-    if (m_buckets[bucket] == nullptr)
-    {
+        // If the bucket has never been used,
+        // Assign the bucket to the new node
         m_buckets[bucket] = n;
+        cerr << "Successfully assign the new node to the head of the linked list" << endl;
     }
     else
     {
-        Node* p = m_buckets[bucket];
-        while(p != nullptr && p->next != nullptr)
-            p = p->next;
+        while(p != nullptr)
+        {
+            if (p->key == key)
+            {
+                p->value = value;
+                cerr << "Successfully update the value" << endl;
+                return;
+            }
+            if (p->next != nullptr)
+                p = p->next;
+        }
         p->next = n;
+        cerr << "Successfully assign the new node to the tail of the linked list" << endl;
     }
     m_nItems++;
     
     if (getLoadFactor() > m_maxLF)
     {
+        cerr << "Load factor is too big" << endl;
         // allocate new bigger dynamic array
-        Bucket temp[2 * NUM_BUCK];
+        resizeArray(m_buckets, NUM_BUCK);
     }
-    
+    cerr << "Leave associate" << endl << endl;
 }
 
+template <class KeyType, class ValueType>
+void MyHash<KeyType, ValueType>::resizeArray(Node** oldArray, int size)
+{
+    Node** newArray = new Node* [2 * size];
+    for (int i = 0; i < size; i++)
+    {
+        if (oldArray[i] != nullptr)
+        {
+            KeyType tempK = oldArray[i]->key;
+            ValueType tempV = oldArray[i]->value;
+            Node* n = new Node;
+            n->value = tempV;
+            n->key = tempK;
+            n->next = nullptr;
+            
+            unsigned int hash(const KeyType& key);
+            // find out where the target bucket is in newArray
+            int bucket = hash(tempK) % (2 * size);
+            cerr << tempK << tempV << bucket << endl;
+            Node* p = newArray[bucket];
+            cerr << p << endl;
+            if (p == nullptr)
+            {
+                // If the bucket has never been used,
+                // Assign the bucket to the new node
+                newArray[bucket] = n;
+            }
+            else
+            {
+                while(p != nullptr)
+                {
+                    if (p->key == tempK)
+                    {
+                        p->value = tempV;
+                        return;
+                    }
+                    if (p->next != nullptr)
+                        p = p->next;
+                }
+                p->next = n;
+            }
+        }
+    }
+    delete [] oldArray;
+    oldArray = newArray;
+}
 
 template <class KeyType, class ValueType>
 const ValueType* MyHash<KeyType, ValueType>::find(const KeyType& key) const
@@ -191,14 +256,34 @@ void MyHash<KeyType, ValueType>::swap(MyHash<KeyType, ValueType>& mh1, MyHash<Ke
 
 void test()
 {
-    MyHash<string, char> test1;
+    MyHash<string, string> test1(0.05);
     
-    test1.associate("David", 'A');
-    test1.associate("Alex", 'B');
-    test1.associate("Zach", 'D');
+    test1.associate("indeed", "abcddc");
+    test1.associate("kayuuy", "abcddc");
+    test1.associate("hafsrxc", "abcdefg");
+    test1.associate("hafsrxc", "abfdefg");
+    test1.associate("ysahha", "abcddc");
+    test1.associate("cmyaldw", "abcdefg");
+    test1.associate("xycakld", "abcdefg");
     
-    assert(test1.getNumItems() == 3);
+    assert(test1.getNumItems() == 6);
+    cerr << test1.getLoadFactor() << endl;
     
+    for (int i = 0; i < NUM_BUCK; i++)
+    {
+        if (test1.m_buckets[i] == nullptr)
+            cout << "Empty bucket " << i << endl;
+        else
+        {
+            cout << "Key: " << test1.m_buckets[i]->key << endl;
+            MyHash<string, string>::Node* p = test1.m_buckets[i];
+            while (p != nullptr)
+            {
+                cout << "   Value: " << p->value << endl;
+                p = p->next;
+            }
+        }
+    }
     cout << "Passed" << endl;
     
 }
