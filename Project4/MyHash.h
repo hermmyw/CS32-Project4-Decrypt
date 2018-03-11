@@ -88,14 +88,14 @@ void MyHash<KeyType, ValueType>::reset()
     swap(*this, *temp);
     //    for (int i = 0; i < m_size; i++)
     //        cerr << m_buckets[i] << " " << i << endl;
-    cerr << "temp: ";
+    // cerr << "temp: ";
     delete temp;
 }
 
 template <class KeyType, class ValueType>
 void MyHash<KeyType, ValueType>::associate(const KeyType& key, const ValueType& value)
 {
-    cerr << "Enter associate" << endl;
+    // cerr << "Enter associate" << endl;
     // Create a new node for the new key and value
     Node* n = new Node;
     n->value = value;
@@ -105,19 +105,19 @@ void MyHash<KeyType, ValueType>::associate(const KeyType& key, const ValueType& 
     // Find the bucket that the key corresponds to
     unsigned int hash(const KeyType& key);
     unsigned int bucket = hash(key) % m_size;
-    cerr << bucket << endl;
+    // cerr << bucket << endl;
     
     // Look at the linked list in the bucket
     Node* p = new Node;
     p = m_buckets[bucket];
-    cerr << p << endl;
-    cerr << "Key: " << n->key << "  Value: " << n->value << " Bucket" << bucket << endl;
+    // cerr << p << endl;
+    // cerr << "Key: " << n->key << " Bucket" << bucket << endl;
     if (p == nullptr)
     {
         // If the bucket has never been used,
         // Assign the bucket to the new node
         m_buckets[bucket] = n;
-        cerr << "ADD NEW" << endl;
+        //cerr << "ADD NEW" << endl;
     }
     else
     {
@@ -127,14 +127,14 @@ void MyHash<KeyType, ValueType>::associate(const KeyType& key, const ValueType& 
             {
                 p->value = value;
                 delete n;
-                cerr << "UPDATE" << endl << "Leave associate" << endl << endl;
+                // cerr << "UPDATE" << endl << "Leave associate" << endl << endl;
                 return;
             }
             p = p->next;
         }
         n->next = m_buckets[bucket];
         m_buckets[bucket] = n;
-        cerr << "ADD" << endl;
+        // cerr << "ADD" << endl;
     }
     m_nItems++;
     
@@ -146,7 +146,7 @@ void MyHash<KeyType, ValueType>::associate(const KeyType& key, const ValueType& 
         //        for (int i = 0; i < m_size; i++)
         //            cerr << m_buckets[i] << " " << i << endl;
     }
-    cerr << "Leave associate" << endl << endl;
+    // cerr << "Leave associate" << endl << endl;
 }
 
 template <class KeyType, class ValueType>
@@ -166,51 +166,57 @@ void MyHash<KeyType, ValueType>::resizeArray()
     {
         if (temp[i] != nullptr)
         {
-            KeyType tempK = temp[i]->key;
-            ValueType tempV = temp[i]->value;
-            
-            // Get the node ready to be added
-            Node* n = new Node;
-            n->value = tempV;
-            n->key = tempK;
-            n->next = nullptr;
-            
-            // find out where the target bucket is in newArray
-            unsigned int hash(const KeyType& key);
-            unsigned int bucket = hash(tempK) % (2 * m_size);
-            cerr << "Key: " << tempK << ". Value: " << tempV << ". At the new bucket: " << bucket << endl;
-            
-            Node* p = new Node;
-            p = m_buckets[bucket];
-            cerr << p << endl;
-            if (p == nullptr)
+            Node* tempN = new Node;
+            tempN = temp[i];
+            while (tempN != nullptr)
             {
-                // If the bucket has never been used,
-                // Assign the bucket to the new node
-                m_buckets[bucket] = n;
-                cerr << "New Array: ADD NEW" << endl;
-            }
-            else
-            {
-                while(p != nullptr)
+                KeyType tempK = tempN->key;
+                ValueType tempV = tempN->value;
+            
+                // Get the node ready to be added
+                Node* n = new Node;
+                n->value = tempV;
+                n->key = tempK;
+                n->next = nullptr;
+            
+                // find out where the target bucket is in newArray
+                unsigned int hash(const KeyType& key);
+                unsigned int bucket = hash(tempK) % (2 * m_size);
+                // cerr << "Key: " << tempK << ". At the new bucket: " << bucket << endl;
+            
+                Node* p = new Node;
+                p = m_buckets[bucket];
+                // cerr << p << endl;
+                if (p == nullptr)
                 {
-                    if (p->key == tempK)
-                    {
-                        p->value = tempV;
-                        n = nullptr;
-                        cerr << "New Array: UPDATE" << endl;
-                        break;
-                    }
-                    p = p->next;
-                }
-                if (n != nullptr)
-                {
-                    n->next = m_buckets[i];
-                    m_buckets[i] = n;
+                    // If the bucket has never been used,
+                    // Assign the bucket to the new node
+                    m_buckets[bucket] = n;
+                    // cerr << "New Array: ADD NEW" << endl;
                 }
                 else
-                    delete n;
-                cerr << "New Array: ADD" << endl;
+                {
+                    while(p != nullptr)
+                    {
+                        if (p->key == tempK)
+                        {
+                            p->value = tempV;
+                            n = nullptr;
+                            // // cerr << "New Array: UPDATE" << endl;
+                            break;
+                        }
+                        p = p->next;
+                    }
+                    if (n != nullptr)
+                    {
+                        n->next = m_buckets[bucket];
+                        m_buckets[bucket] = n;
+                    }
+                    else
+                        delete n;
+                    // cerr << "New Array: ADD" << endl;
+                }
+                tempN = tempN->next;
             }
         }
     }
@@ -234,9 +240,12 @@ const ValueType* MyHash<KeyType, ValueType>::find(const KeyType& key) const
 {
     unsigned int hash(const KeyType& key);
     unsigned int bucket = hash(key) % m_size;
+    // cerr << bucket << endl;
     Node* p = m_buckets[bucket];
+    // cerr << p << endl;
     while (p != nullptr)
     {
+        // cerr << "Key: " << p->key << endl;
         if  (p->key == key)
             return &(p->value);
         else

@@ -1,4 +1,4 @@
-Project 4 Notes
+iProject 4 Notes
 
 Requirements:
 	550 lines of code
@@ -386,8 +386,7 @@ bool WordListImpl::loadWordList(string dictFilename);
 
 bool WordListImpl::contains(string word) const
 {
-	int key = hash(word);
-	if (m_wordList.find(key) != nullptr && *(m_wordList.find(key)) == toLower(word))
+	if (m_wordList.find(word) != nullptr && *(m_wordList.find(word)) == toLower(word))
 		return true;
 	return false;
 }

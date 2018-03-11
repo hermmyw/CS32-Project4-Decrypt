@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <cassert>
@@ -17,17 +18,20 @@ public:
     vector<string> findCandidates(string cipherWord, string currTranslation) const;
 private:
     // Key: word; Value: pattern
-    MyHash<string, string> m_wordPatterList;
+    MyHash<string, vector<string>*> m_wordPatternList;
+    // MyHash<string, string> m_wordToPattern;
+    string pattern(const string& s) const;
+    void lowerCase(string& s) const;
 };
 
 WordListImpl::WordListImpl()
-:m_wordPatterList()
+:m_wordPatternList()
 { }
 
 bool WordListImpl::loadWordList(string filename)
 {
-    if (m_wordPatterList.getNumItems() != 0)
-        m_wordPatterList.reset();
+    if (m_wordPatternList.getNumItems() != 0)
+        m_wordPatternList.reset();
     ifstream infile(filename);
     if(!infile)
     {
@@ -38,27 +42,156 @@ bool WordListImpl::loadWordList(string filename)
     string s;
     while (getline(infile, s))
     {
+        lowerCase(s);
 //        unsigned int hash(const string& s);
 //        int bucket = hash(s) % NUM_BUCK;
-        m_wordPatterList.associate(s, "");
+        // find the letter pattern of this word
+        string p = pattern(s);
+        // m_wordToPattern.associate(s, p);
+        // check if the letter pattern has appeared in the hash table
+        vector<string>** wordsPtr = m_wordPatternList.find(p);
+        
+        // if hasn't, create a vector of words
+        // and add the word.
+        if (wordsPtr == nullptr)
+        {
+            vector<string>* wordsWithSamePattern = new vector<string>;
+            (*wordsWithSamePattern).push_back(s);
+//            for (int i = 0; i < (*wordsWithSamePattern).size(); i++)
+//                cerr << (*wordsWithSamePattern)[i] << endl;
+            m_wordPatternList.associate(p, wordsWithSamePattern);
+        }
+        // if it has appeared, add the word to the vector
+        else
+        {
+            (*wordsPtr)->push_back(s);
+//            for (int i = 0; i < (**wordsPtr).size(); i++)
+//                cerr << (**wordsPtr)[i] << endl;
+            // add/update the vector of words of the letter pattern
+            m_wordPatternList.associate(p, *(wordsPtr));
+        }
     }
-    cerr << m_wordPatterList.getNumItems() << endl;
+    // number of patterns
+    // cerr << m_wordPatternList.getNumItems() << endl;
+    // cerr << m_wordToPattern.getNumItems() << endl;
     return true;
     
 }
 
 bool WordListImpl::contains(string word) const
 {
-    for (int i = 0; i < word.size(); i++)
-        word[i] = tolower(word[i]);
-    if (m_wordPatterList.find(word) != nullptr)
-        return true;
-    return false;
+    // Case-insensitive
+    lowerCase(word);
+    
+    string p = pattern(word);
+    // cerr << "pattern: " << p << endl;
+    vector<string>* const* wordsPtr = m_wordPatternList.find(p);   // O(1)
+    if (wordsPtr == nullptr)
+    {
+        //cerr << "The Pattern is not found" << endl;
+        return false;
+    }
+    else
+    {
+//        for (int i = 0; i < (**wordsPtr).size(); i++)
+//            cerr << (**wordsPtr)[i] << endl;
+        if ((find((**wordsPtr).begin(), (**wordsPtr).end(), word)) != (**wordsPtr).end())
+        {
+            // cerr << "Found" << endl;
+            return true;
+        }
+        else
+        {
+            // cerr << "The pattern is found, but the word is not found" << endl;
+            return false;
+        }
+    }
+    
+    // return (m_wordToPattern.find(word) != nullptr);
 }
 
 vector<string> WordListImpl::findCandidates(string cipherWord, string currTranslation) const
 {
-    return vector<string>();  // This compiles, but may not be correct
+    if (cipherWord.size() != currTranslation.size())
+        return vector<string> ();
+    for (int i = 0; i < cipherWord.size(); i++)
+    {
+        if (cipherWord[i] != '\'' && !isalpha(cipherWord[i]))
+            return vector<string> ();
+        if (currTranslation[i] != '?' && currTranslation[i] != '\'' && !isalpha(currTranslation[i]))
+            return vector<string> ();
+    }
+    
+    lowerCase(cipherWord);
+    lowerCase(currTranslation);
+    vector<string> candidates;
+    vector<string> potentialCand;
+    string p = pattern(cipherWord);
+    // cerr << "Pattern of cipherword: " << p << endl;
+    vector<string>* const* vsp = m_wordPatternList.find(p);
+    for (int i = 0; i < (**vsp).size(); i++)
+        potentialCand.push_back((**vsp)[i]);
+    for (int i = 0; i < currTranslation.size(); i++)
+    {
+        if (isalpha(currTranslation[i]) && !isalpha(cipherWord[i]))
+            return vector<string>();
+        if (currTranslation[i] == '?' && !isalpha(cipherWord[i]))
+            return vector<string>();
+        if (currTranslation[i] == '\'' && cipherWord[i] != '\'')
+            return vector<string>();
+    }
+    for (int i = 0; i < potentialCand.size(); i++)
+    {
+        bool isCand = true;
+        if (potentialCand[i].size() != currTranslation.size())
+            isCand = false;
+        for (int j = 0; j < currTranslation.size(); j++)
+        {
+            if (isalpha(currTranslation[j]) && currTranslation[j] != potentialCand[i][j])
+                isCand = false;
+            else if (currTranslation[j] == '?' && !isalpha(potentialCand[i][j]))
+                isCand = false;
+            else if (currTranslation[j] == '\'' && currTranslation[j] != potentialCand[i][j])
+                isCand = false;
+        }
+        if (isCand)
+            candidates.push_back(potentialCand[i]);
+    }
+    return candidates;
+}
+
+string WordListImpl::pattern(const string& s) const
+{
+    string pattern;
+    // pattern has the same length of the word
+    
+    for (int i = 0; i < s.size(); i++)
+        pattern += '0';
+    
+    int i = 0, j  = 0, k = 0;
+    for (i = 0, j = 0; i < s.size(); i++)
+    {
+        if (pattern[i] == '0')
+        {
+            pattern[i] = 'a' + j;
+            for (k = i + 1; k < s.size(); k++)
+            {
+                if (s[i] == s[k])
+                    pattern[k] = pattern[i];
+            }
+            j++;
+        }
+    }
+    return pattern;
+}
+
+void WordListImpl::lowerCase(string &s) const
+{
+    for (int i = 0; i < s.size(); i++)
+    {
+        if (isalpha(s[i]))
+            s[i] = tolower(s[i]);
+    }
 }
 
 //***** hash functions for string, int, and char *****
@@ -116,6 +249,15 @@ int main()
 {
     WordList w;
     w.loadWordList(FILENAME);
-    assert(w.contains("ABDuctors"));
+    assert(w.contains("ABANdon"));
+    assert(w.contains("'em"));
+    assert(w.contains("arbItrariness"));
+    assert(w.contains("sinuateS"));
+    assert(!w.contains("csdjhwdc"));
+    assert(!w.contains("dasc"));
+    assert(!w.contains("vrwjy"));
+    vector<string> cand = w.findCandidates("xyqbbq", "???mm?");
+    for (int i = 0; i < cand.size(); i++)
+        cerr << cand[i] << endl;
     return 0;
 }
