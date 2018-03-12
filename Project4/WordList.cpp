@@ -129,11 +129,15 @@ vector<string> WordListImpl::findCandidates(string cipherWord, string currTransl
     string p = pattern(cipherWord);
     cerr << "Pattern of cipherword: " << p << endl;
     vector<string>* const* vsp = m_wordPatternList.find(p);
-    for (int i = 0; i < (**vsp).size(); i++)
+    if (vsp != nullptr)
     {
-        potentialCand.push_back((**vsp)[i]);
-        cerr << potentialCand[i] << endl;
+        for (int i = 0; i < (**vsp).size(); i++)
+        {
+            potentialCand.push_back((**vsp)[i]);
+            cerr << "Potential candidate: " << potentialCand[i] << endl;
+        }
     }
+    
     for (int i = 0; i < currTranslation.size(); i++)
     {
         if (isalpha(currTranslation[i]) && !isalpha(cipherWord[i]))
@@ -148,6 +152,7 @@ vector<string> WordListImpl::findCandidates(string cipherWord, string currTransl
         bool isCand = true;
         if (potentialCand[i].size() != currTranslation.size())
             isCand = false;
+        cerr << "Current translation " << currTranslation << endl;
         for (int j = 0; j < currTranslation.size(); j++)
         {
             if (isalpha(currTranslation[j]) && currTranslation[j] != potentialCand[i][j])
@@ -158,7 +163,10 @@ vector<string> WordListImpl::findCandidates(string cipherWord, string currTransl
                 isCand = false;
         }
         if (isCand)
+        {
+            cerr << "Potential candidate: " << potentialCand[i] << endl;
             candidates.push_back(potentialCand[i]);
+        }
     }
     return candidates;
 }
