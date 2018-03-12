@@ -78,6 +78,9 @@ MyHash<KeyType, ValueType>::MyHash(double maxLoadFactor)
 template<typename KeyType, typename ValueType>
 MyHash<KeyType, ValueType>::~MyHash()
 {
+    for (int i = 0; i < m_size; i++)
+        delete m_buckets[i];
+    delete [] m_buckets;
     cerr << "MyHash Destructor" << endl;
 }
 

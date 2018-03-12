@@ -51,9 +51,9 @@ One possible algorithm
 		return true;
 	}
 
-	string crack(string ciphereText, vector<string>& output)
+	vector<string> crack(string ciphereText, vector<string>& output)
 	{
-		output = "";
+		vector<string> output;
 		vector<string> words = tokenize(ciphereText);
 		int maxLength = getMaxLength(words);
 		string w;

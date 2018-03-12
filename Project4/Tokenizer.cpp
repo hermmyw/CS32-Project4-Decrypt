@@ -35,7 +35,8 @@ vector<string> TokenizerImpl::tokenize(const string& s)
             w = "";
         }
     }
-    cerr << "call tokenize" << endl;
+    if (w != "")
+        tokens.push_back(w);
     return tokens;
 }
 
@@ -64,19 +65,19 @@ vector<string> Tokenizer::tokenize(const std::string& s) const
 
 
 
-
-
-int main()
-{
-    Tokenizer t(" ,.!");
-    vector<string> v = t.tokenize("This,, is a test! It's the... best!");
-    for (int i = 0; i < v.size(); i++)
-        cout << v[i] << endl;
-
-    string s = "!!!!!";
-    v = t.tokenize(s);
-    for (int i = 0; i < v.size(); i++)
-        cout << v[i] << endl;
-
-}
+//
+//
+//int main()
+//{
+//    Tokenizer t(" ,.!");
+//    vector<string> v = t.tokenize("This,, is a test! It's the... best!");
+//    for (int i = 0; i < v.size(); i++)
+//        cout << v[i] << endl;
+//
+//    string s = "!!!!!";
+//    v = t.tokenize(s);
+//    for (int i = 0; i < v.size(); i++)
+//        cout << v[i] << endl;
+//
+//}
 

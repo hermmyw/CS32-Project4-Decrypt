@@ -1,2 +1,3 @@
-dependencies: /Users/hermmy/Desktop/skeleton/Tokenizer.cpp \
-  /Users/hermmy/Desktop/skeleton/provided.h
+dependencies: \
+  /Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/Tokenizer.cpp \
+  /Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/provided.h

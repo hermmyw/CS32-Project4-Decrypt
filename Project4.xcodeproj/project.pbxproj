@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		35D8C79F205496A400D30128 /* WordList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35D8C79E205496A300D30128 /* WordList.cpp */; };
 		35D8C7A32054CDB400D30128 /* Translator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35D8C7A22054CDB400D30128 /* Translator.cpp */; };
+		35D8C7A52054F01400D30128 /* Decrypter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35D8C7A42054F01400D30128 /* Decrypter.cpp */; };
+		35D8C7A72054F18F00D30128 /* WordList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35D8C7A62054F18F00D30128 /* WordList.cpp */; };
+		35D8C7AA2054F30900D30128 /* Tokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35D8C7A82054F30900D30128 /* Tokenizer.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,8 +28,11 @@
 /* Begin PBXFileReference section */
 		35BE1FDC2050B10E00818D3E /* Project4 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Project4; sourceTree = BUILT_PRODUCTS_DIR; };
 		35D8C79B2054822D00D30128 /* MyHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyHash.h; sourceTree = "<group>"; };
-		35D8C79E205496A300D30128 /* WordList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WordList.cpp; sourceTree = "<group>"; };
 		35D8C7A22054CDB400D30128 /* Translator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Translator.cpp; sourceTree = "<group>"; };
+		35D8C7A42054F01400D30128 /* Decrypter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Decrypter.cpp; sourceTree = "<group>"; };
+		35D8C7A62054F18F00D30128 /* WordList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WordList.cpp; sourceTree = "<group>"; };
+		35D8C7A82054F30900D30128 /* Tokenizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Tokenizer.cpp; sourceTree = "<group>"; };
+		35D8C7A92054F30900D30128 /* provided.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = provided.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,8 +66,11 @@
 			isa = PBXGroup;
 			children = (
 				35D8C79B2054822D00D30128 /* MyHash.h */,
-				35D8C79E205496A300D30128 /* WordList.cpp */,
 				35D8C7A22054CDB400D30128 /* Translator.cpp */,
+				35D8C7A62054F18F00D30128 /* WordList.cpp */,
+				35D8C7A42054F01400D30128 /* Decrypter.cpp */,
+				35D8C7A92054F30900D30128 /* provided.h */,
+				35D8C7A82054F30900D30128 /* Tokenizer.cpp */,
 			);
 			path = Project4;
 			sourceTree = "<group>";
@@ -124,7 +132,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35D8C79F205496A400D30128 /* WordList.cpp in Sources */,
+				35D8C7A72054F18F00D30128 /* WordList.cpp in Sources */,
+				35D8C7AA2054F30900D30128 /* Tokenizer.cpp in Sources */,
+				35D8C7A52054F01400D30128 /* Decrypter.cpp in Sources */,
 				35D8C7A32054CDB400D30128 /* Translator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

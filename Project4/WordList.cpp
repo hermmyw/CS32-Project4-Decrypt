@@ -127,10 +127,13 @@ vector<string> WordListImpl::findCandidates(string cipherWord, string currTransl
     vector<string> candidates;
     vector<string> potentialCand;
     string p = pattern(cipherWord);
-    // cerr << "Pattern of cipherword: " << p << endl;
+    cerr << "Pattern of cipherword: " << p << endl;
     vector<string>* const* vsp = m_wordPatternList.find(p);
     for (int i = 0; i < (**vsp).size(); i++)
+    {
         potentialCand.push_back((**vsp)[i]);
+        cerr << potentialCand[i] << endl;
+    }
     for (int i = 0; i < currTranslation.size(); i++)
     {
         if (isalpha(currTranslation[i]) && !isalpha(cipherWord[i]))
@@ -244,20 +247,21 @@ vector<string> WordList::findCandidates(string cipherWord, string currTranslatio
 
 
 
-const string FILENAME = "/Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/wordlist.txt";
-int main()
-{
-    WordList w;
-    w.loadWordList(FILENAME);
-    assert(w.contains("ABANdon"));
-    assert(w.contains("'em"));
-    assert(w.contains("arbItrariness"));
-    assert(w.contains("sinuateS"));
-    assert(!w.contains("csdjhwdc"));
-    assert(!w.contains("dasc"));
-    assert(!w.contains("vrwjy"));
-    vector<string> cand = w.findCandidates("xyqbbq", "???mm?");
-    for (int i = 0; i < cand.size(); i++)
-        cerr << cand[i] << endl;
-    return 0;
-}
+//const string FILENAME = "/Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/wordlist.txt";
+//int main()
+//{
+//    WordList w;
+//    w.loadWordList(FILENAME);
+//    assert(w.contains("Balloon"));
+//    assert(w.contains("'em"));
+//    assert(w.contains("arbItrariness"));
+//    assert(w.contains("sinuateS"));
+//    assert(!w.contains("csdjhwdc"));
+//    assert(!w.contains("dasc"));
+//    assert(!w.contains("vrwjy"));
+//    vector<string> cand = w.findCandidates("bdttook", "???????");
+//    for (int i = 0; i < cand.size(); i++)
+//        cerr << cand[i] << endl;
+//    return 0;
+//}
+
