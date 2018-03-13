@@ -61,8 +61,7 @@ MyHash<KeyType, ValueType>::MyHash(double maxLoadFactor)
     m_buckets = new Node*[NUM_BUCK];
     for (int i = 0; i < NUM_BUCK; i++)
     {
-        m_buckets[i] = new Node;
-        m_buckets[i]->used = false;
+        m_buckets[i] = nullptr;
     }
 }
 
@@ -71,7 +70,14 @@ MyHash<KeyType, ValueType>::~MyHash()
 {
     for (int i = 0; i < m_size; i++)
     {
-        delete m_buckets[i];
+        Node* p = m_buckets[i];
+        while (p != nullptr)
+        {
+            Node* kill = new Node;
+            kill = p;
+            p = p->next;
+            delete kill;
+        }
     }
     delete [] m_buckets;
 }
@@ -95,24 +101,26 @@ void MyHash<KeyType, ValueType>::associate(const KeyType& key, const ValueType& 
     n->key = key;
     n->used = true;
     // Look at the linked list in the bucket
-//    if (p == nullptr)
-//    {
-//        m_buckets[bucket] = n;
-//        m_nItems++;
-//    }
-//    else
-    if (find(key) != nullptr)
+    if (m_buckets[bucket] == nullptr)
+    {
+        m_buckets[bucket] = new Node;
+        m_buckets[bucket] = n;
+        m_nItems++;
+    }
+    else if (find(key) != nullptr)
     {
         *(find(key)) = value;
+        delete n;
+        n = nullptr;
     }
     else
     {
         n->next = m_buckets[bucket];
-        if (m_buckets[bucket]->used == false)
-        {
-            // delete m_buckets[bucket];
-            n->next = nullptr;
-        }
+//        if (m_buckets[bucket]->used == false)
+//        {
+//            // delete m_buckets[bucket];
+//            n->next = nullptr;
+//        }
         m_buckets[bucket] = n;
         m_nItems++;
     }
@@ -129,13 +137,13 @@ void MyHash<KeyType, ValueType>::resizeArray()
     Node** newArray = new Node* [2 * m_size];
     for (int i = 0; i < 2 * m_size; i++)
     {
-        newArray[i] = new Node;
-        newArray[i]->used = false;
+        newArray[i] = nullptr;
     }
+    
     for (int i = 0; i < m_size; i++)
     {
         Node* tempN = m_buckets[i];
-        while (tempN != nullptr && tempN->used)
+        while (tempN != nullptr)
         {
             KeyType tempK = tempN->key;
             ValueType tempV = tempN->value;
@@ -152,26 +160,27 @@ void MyHash<KeyType, ValueType>::resizeArray()
             unsigned int bucket = hasher(tempK) % (2 * m_size);
             // cerr << "Key: " << tempK << ". At the new bucket: " << bucket << endl;
         
-//            if (m_buckets[bucket] == nullptr)
-//            {
-//                // If the bucket has never been used,
-//                // Assign the bucket to the new node
-//                m_buckets[bucket] = n;
-//            }
-//            else
-            if (find(tempK) != nullptr)
+            if (m_buckets[bucket] == nullptr)
+            {
+                // If the bucket has never been used,
+                // Assign the bucket to the new node
+                m_buckets[bucket] = new Node;
+                m_buckets[bucket] = n;
+            }
+            else if (find(tempK) != nullptr)
             {
                 *(find(tempK)) = tempV;
                 delete n;
+                n = nullptr;
             }
             else
             {
                 n->next = m_buckets[bucket];
-                if (m_buckets[bucket]->used == false)
-                {
-                    // delete m_buckets[bucket];
-                    n->next = nullptr;
-                }
+//                if (m_buckets[bucket]->used == false)
+//                {
+//                    // delete m_buckets[bucket];
+//                    n->next = nullptr;
+//                }
                 m_buckets[bucket] = n;
             }
             tempN = tempN->next;
@@ -188,18 +197,15 @@ const ValueType* MyHash<KeyType, ValueType>::find(const KeyType& key) const
 {
     unsigned int hasher(const KeyType& key);
     unsigned int bucket = hasher(key) % m_size;
-    // cerr << bucket << endl;
     Node* p = m_buckets[bucket];
-    // cerr << p << endl;
-    while (p != nullptr && p->used)
+
+    while (p != nullptr)
     {
-        // cerr << "Key: " << p->key << endl;
         if  (p->key == key)
             return &(p->value);
         else
             p = p->next;
     }
-    // delete p;
     return nullptr;
 }
 
