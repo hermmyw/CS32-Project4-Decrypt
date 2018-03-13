@@ -5,8 +5,6 @@
 #include <functional>
 #include <algorithm>
 #include <fstream>
-#include <iostream>
-#include <cassert>
 using namespace std;
 
 class WordListImpl
@@ -35,7 +33,7 @@ bool WordListImpl::loadWordList(string filename)
     ifstream infile(filename);
     if(!infile)
     {
-        cerr << "Cannot open " << filename << endl;
+        // cerr << "Cannot open " << filename << endl;
         return false;
     }
     
@@ -126,15 +124,15 @@ vector<string> WordListImpl::findCandidates(string cipherWord, string currTransl
     lowerCase(currTranslation);
     vector<string> candidates;
     vector<string> potentialCand;
-    string p = pattern(cipherWord);
-    cerr << "Pattern of cipherword: " << p << endl;
+    string p;
+    p = pattern(cipherWord);
+    // cerr << "Pattern of cipherword: " << p << endl;
     vector<string>* const* vsp = m_wordPatternList.find(p);
     if (vsp != nullptr)
     {
         for (int i = 0; i < (**vsp).size(); i++)
         {
             potentialCand.push_back((**vsp)[i]);
-            cerr << "Potential candidate: " << potentialCand[i] << endl;
         }
     }
     
@@ -152,7 +150,6 @@ vector<string> WordListImpl::findCandidates(string cipherWord, string currTransl
         bool isCand = true;
         if (potentialCand[i].size() != currTranslation.size())
             isCand = false;
-        cerr << "Current translation " << currTranslation << endl;
         for (int j = 0; j < currTranslation.size(); j++)
         {
             if (isalpha(currTranslation[j]) && currTranslation[j] != potentialCand[i][j])
@@ -164,7 +161,6 @@ vector<string> WordListImpl::findCandidates(string cipherWord, string currTransl
         }
         if (isCand)
         {
-            cerr << "Potential candidate: " << potentialCand[i] << endl;
             candidates.push_back(potentialCand[i]);
         }
     }
@@ -207,17 +203,17 @@ void WordListImpl::lowerCase(string &s) const
 
 //***** hash functions for string, int, and char *****
 
-unsigned int hash(const string& s)
+unsigned int hasher(const string& s)
 {
     return hash<string>()(s);
 }
 
-unsigned int hash(const int& i)
+unsigned int hasher(const int& i)
 {
     return hash<int>()(i);
 }
 
-unsigned int hash(const char& c)
+unsigned int hasher(const char& c)
 {
     return hash<char>()(c);
 }

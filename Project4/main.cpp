@@ -9,7 +9,7 @@
 #include <numeric>
 using namespace std;
 
-const string WORDLIST_FILE = "wordlist.txt";
+const string WORDLIST_FILE = "/Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/wordlist.txt";
 
 string encrypt(string plaintext)
 {
@@ -42,23 +42,24 @@ bool decrypt(string ciphertext)
 	return true;
 }
 
-int main(int argc, char* argv[])
-{
-	if (argc == 3  &&  argv[1][0] == '-')
-	{
-		switch (tolower(argv[1][1]))
-		{
-		  case 'e':
-			cout << encrypt(argv[2]) << endl;
-			return 0;
-		  case 'd':
-			if (decrypt(argv[2]))
-				return 0;
-			return 1;
-		}
-	}
+//int main(int argc, char* argv[])
+//{
+//    if (argc == 3  &&  argv[1][0] == '-')
+//    {
+//        switch (tolower(argv[1][1]))
+//        {
+//          case 'e':
+//            cout << encrypt(argv[2]) << endl;
+//            return 0;
+//          case 'd':
+//            if (decrypt(argv[2]))
+//                return 0;
+//            return 1;
+//        }
+//    }
+//
+//    cout << "Usage to encrypt:  " << argv[0] << " -e \"Your message here.\"" << endl;
+//    cout << "Usage to decrypt:  " << argv[0] << " -d \"Uwey tirrboi miyi.\"" << endl;
+//    return 1;
+//}
 
-	cout << "Usage to encrypt:  " << argv[0] << " -e \"Your message here.\"" << endl;
-	cout << "Usage to decrypt:  " << argv[0] << " -d \"Uwey tirrboi miyi.\"" << endl;
-	return 1;
-}

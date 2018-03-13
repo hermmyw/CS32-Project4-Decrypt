@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		35A4D68920573F2C00569CE3 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35A4D68820573F2C00569CE3 /* main.cpp */; };
+		35A4D68D20578BE500569CE3 /* p4sanity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35A4D68C20578BE500569CE3 /* p4sanity.cpp */; };
 		35D8C7A32054CDB400D30128 /* Translator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35D8C7A22054CDB400D30128 /* Translator.cpp */; };
 		35D8C7A52054F01400D30128 /* Decrypter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35D8C7A42054F01400D30128 /* Decrypter.cpp */; };
 		35D8C7A72054F18F00D30128 /* WordList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 35D8C7A62054F18F00D30128 /* WordList.cpp */; };
@@ -26,6 +28,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		35A4D68820573F2C00569CE3 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		35A4D68C20578BE500569CE3 /* p4sanity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = p4sanity.cpp; sourceTree = "<group>"; };
 		35BE1FDC2050B10E00818D3E /* Project4 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Project4; sourceTree = BUILT_PRODUCTS_DIR; };
 		35D8C79B2054822D00D30128 /* MyHash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyHash.h; sourceTree = "<group>"; };
 		35D8C7A22054CDB400D30128 /* Translator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Translator.cpp; sourceTree = "<group>"; };
@@ -67,9 +71,11 @@
 			children = (
 				35D8C79B2054822D00D30128 /* MyHash.h */,
 				35D8C7A22054CDB400D30128 /* Translator.cpp */,
+				35A4D68C20578BE500569CE3 /* p4sanity.cpp */,
 				35D8C7A62054F18F00D30128 /* WordList.cpp */,
 				35D8C7A42054F01400D30128 /* Decrypter.cpp */,
 				35D8C7A92054F30900D30128 /* provided.h */,
+				35A4D68820573F2C00569CE3 /* main.cpp */,
 				35D8C7A82054F30900D30128 /* Tokenizer.cpp */,
 			);
 			path = Project4;
@@ -133,8 +139,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				35D8C7A72054F18F00D30128 /* WordList.cpp in Sources */,
+				35A4D68D20578BE500569CE3 /* p4sanity.cpp in Sources */,
 				35D8C7AA2054F30900D30128 /* Tokenizer.cpp in Sources */,
 				35D8C7A52054F01400D30128 /* Decrypter.cpp in Sources */,
+				35A4D68920573F2C00569CE3 /* main.cpp in Sources */,
 				35D8C7A32054CDB400D30128 /* Translator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

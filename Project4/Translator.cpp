@@ -1,7 +1,7 @@
 #include "provided.h"
 #include <string>
-#include <iostream>
 #include <cassert>
+#include <iostream>
 using namespace std;
 
 const int MAX = 10;
@@ -106,6 +106,7 @@ bool TranslatorImpl::pushMapping(string ciphertext, string plaintext)
         }
     }
     
+    
     // Update the current mapping table
     for (int i = 0; i < ciphertext.size(); i++)
     {
@@ -113,15 +114,16 @@ bool TranslatorImpl::pushMapping(string ciphertext, string plaintext)
         if (m_mappingTable[0][index] == ciphertext[i] && m_mappingTable[1][index] == '?')
             m_mappingTable[1][index] = plaintext[i];
     }
-    
-    cerr << "Pushed plain text table" << endl;
-    for (int i = 0; i < 26; i++)
-        cerr << m_mappingTable[0][i];
-    cerr << endl;
-    for (int i = 0; i < 26; i++)
-        cerr << m_mappingTable[1][i];
-    cerr << endl;
     m_mappingStack.push(m_mappingTable);
+    
+//    cerr << "Pushed plain text table" << endl;
+//    for (int i = 0; i < 26; i++)
+//        cerr << m_mappingTable[0][i];
+//    cerr << endl;
+//    for (int i = 0; i < 26; i++)
+//        cerr << m_mappingTable[1][i];
+//    cerr << endl;
+    
     
     
     return true;
@@ -131,7 +133,7 @@ bool TranslatorImpl::popMapping()
 {
     if (m_mappingStack.m_head == nullptr)
         return false;
-    cerr << "Enter pop" << endl;
+    // cerr << "Enter pop" << endl;
     m_mappingStack.pop();
     // Restoring the old one
     Node* top = m_mappingStack.top();
@@ -139,7 +141,7 @@ bool TranslatorImpl::popMapping()
     {
         for (int i = 0; i < 26; i++)
         {
-            m_mappingTable[0][i] = top->m_map[0][i];
+            // m_mappingTable[0][i] = top->m_map[0][i];
             m_mappingTable[1][i] = top->m_map[1][i];
         }
     }
@@ -147,22 +149,29 @@ bool TranslatorImpl::popMapping()
     {
         for (int i = 0; i < 26; i++)
         {
-            m_mappingTable[0][i] = 'A' + i;
+            // m_mappingTable[0][i] = 'A' + i;
             m_mappingTable[1][i] = '?';
         }
     }
+//    cerr << "AFTER POPPING" << endl;
+//    for (int i = 0; i < 26; i++)
+//        cerr << m_mappingTable[0][i];
+//    cerr << endl;
+//    for (int i = 0; i < 26; i++)
+//        cerr << m_mappingTable[1][i];
+//    cerr << endl;
     return true;
 }
 
 string TranslatorImpl::getTranslation(const string& ciphertext) const
 {
-    cerr << "Current plain text table" << endl;
-    for (int i = 0; i < 26; i++)
-        cerr << m_mappingTable[0][i];
-    cerr << endl;
-    for (int i = 0; i < 26; i++)
-        cerr << m_mappingTable[1][i];
-    cerr << endl;
+//    cerr << "Current plain text table" << endl;
+//    for (int i = 0; i < 26; i++)
+//        cerr << m_mappingTable[0][i];
+//    cerr << endl;
+//    for (int i = 0; i < 26; i++)
+//        cerr << m_mappingTable[1][i];
+//    cerr << endl;
     
     string result;
     for (int i = 0; i < ciphertext.size(); i++)
@@ -238,16 +247,12 @@ string Translator::getTranslation(const string& ciphertext) const
 //int main()
 //{
 //    Translator t;
-//    string s = "y qook ra bdttook yqkook!";
+//    string s = "Lzdkgd dyrmjls shcg xdggkud fpm xd!!";
 //    cerr << t.getTranslation(s) << endl;
-//    t.pushMapping("bdttook", "BALLOON");
-//    t.pushMapping("ra", "CD");
+//    t.pushMapping("xdggkud", "message");
+//    t.pushMapping("dyrmjls", "eductor");
 //    cerr << t.getTranslation(s) << endl;
-//    assert(!t.pushMapping("a", "R"));
-//    assert(!t.pushMapping("fd", "FD"));
 //    t.popMapping();
-//    t.popMapping();
-//    assert(!t.popMapping());
 //    cerr << t.getTranslation(s) << endl;
 //}
 
