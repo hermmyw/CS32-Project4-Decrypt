@@ -58,11 +58,11 @@
             ignoreCount = "2"
             continueAfterRunningActions = "No"
             filePath = "Project4/WordList.cpp"
-            timestampString = "542604941.680351"
+            timestampString = "542641904.083691"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "167"
-            endingLineNumber = "167"
+            startingLineNumber = "163"
+            endingLineNumber = "163"
             landmarkName = "WordListImpl::findCandidates(string cipherWord, string currTranslation)"
             landmarkType = "7">
          </BreakpointContent>
@@ -74,59 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Project4/Decrypter.cpp"
-            timestampString = "542604941.680447"
+            timestampString = "542641904.084916"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "222"
-            endingLineNumber = "222"
-            landmarkName = "DecrypterImpl::crackHelper(const string&amp; ciphertext, Translator&amp; t, vector&lt;string&gt;&amp; output)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "DecrypterImpl::crackHelper(std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; const&amp;, std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; &gt; &gt;&amp;, Translator&amp;, std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; &gt; &gt;&amp;)"
-                  moduleName = "Project4"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/Decrypter.cpp"
-                  timestampString = "542548707.512926"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "166"
-                  endingLineNumber = "166"
-                  offsetFromSymbolStart = "9460">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "DecrypterImpl::crackHelper(std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; const&amp;, std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; &gt; &gt;&amp;, Translator&amp;, std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; &gt; &gt;&amp;)"
-                  moduleName = "Project4"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/Decrypter.cpp"
-                  timestampString = "542548707.5156651"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "166"
-                  endingLineNumber = "166"
-                  offsetFromSymbolStart = "9557">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Project4/Decrypter.cpp"
-            timestampString = "542604941.680905"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "203"
-            endingLineNumber = "203"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
             landmarkName = "DecrypterImpl::crackHelper(const string&amp; ciphertext, Translator&amp; t, vector&lt;string&gt;&amp; output)"
             landmarkType = "7">
          </BreakpointContent>
@@ -138,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Project4/Decrypter.cpp"
-            timestampString = "542604941.681236"
+            timestampString = "542641904.08587"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "195"
-            endingLineNumber = "195"
+            startingLineNumber = "165"
+            endingLineNumber = "165"
             landmarkName = "DecrypterImpl::crackHelper(const string&amp; ciphertext, Translator&amp; t, vector&lt;string&gt;&amp; output)"
             landmarkType = "7">
          </BreakpointContent>
@@ -154,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Project4/Decrypter.cpp"
-            timestampString = "542604941.681577"
+            timestampString = "542641904.086472"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "191"
-            endingLineNumber = "191"
+            startingLineNumber = "161"
+            endingLineNumber = "161"
             landmarkName = "DecrypterImpl::crackHelper(const string&amp; ciphertext, Translator&amp; t, vector&lt;string&gt;&amp; output)"
             landmarkType = "7">
          </BreakpointContent>
@@ -170,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Project4/WordList.cpp"
-            timestampString = "542604941.681928"
+            timestampString = "542641904.08725"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "168"
-            endingLineNumber = "168"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
             landmarkName = "WordListImpl::findCandidates(string cipherWord, string currTranslation)"
             landmarkType = "7">
          </BreakpointContent>
@@ -249,54 +201,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Project4/MyHash.h"
-            timestampString = "542621722.874928"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "221"
-            endingLineNumber = "221"
-            landmarkName = "getLoadFactor()"
-            landmarkType = "9">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MyHash&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; &gt; &gt;*&gt;::getNumItems() const"
-                  moduleName = "Project4"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/MyHash.h"
-                  timestampString = "542608359.229278"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "237"
-                  endingLineNumber = "237"
-                  offsetFromSymbolStart = "12">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MyHash&lt;int, std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; &gt;::getNumItems() const"
-                  moduleName = "Project4"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/MyHash.h"
-                  timestampString = "542608359.231305"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "237"
-                  endingLineNumber = "237"
-                  offsetFromSymbolStart = "12">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "Project4/p4sanity.cpp"
             timestampString = "542613925.6407779"
             startingColumnNumber = "9223372036854775807"
@@ -311,96 +215,80 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             shouldBeEnabled = "No"
-            ignoreCount = "0"
+            ignoreCount = "15"
             continueAfterRunningActions = "No"
-            filePath = "Project4/MyHash.h"
-            timestampString = "542621722.87532"
+            filePath = "Project4/Decrypter.cpp"
+            timestampString = "542641904.08788"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
-            landmarkName = "~MyHash()"
-            landmarkType = "9">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MyHash&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; &gt; &gt;*&gt;::~MyHash()"
-                  moduleName = "Project4"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/MyHash.h"
-                  timestampString = "542619474.84355"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "80"
-                  endingLineNumber = "80"
-                  offsetFromSymbolStart = "138">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MyHash&lt;int, std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; &gt;::~MyHash()"
-                  moduleName = "Project4"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/MyHash.h"
-                  timestampString = "542619474.84612"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "80"
-                  endingLineNumber = "80"
-                  offsetFromSymbolStart = "138">
-               </Location>
-            </Locations>
+            startingLineNumber = "65"
+            endingLineNumber = "65"
+            landmarkName = "DecrypterImpl::crackHelper(const string&amp; ciphertext, Translator&amp; t, vector&lt;string&gt;&amp; output)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Project4/MyHash.h"
-            timestampString = "542621722.875564"
+            filePath = "Project4/Decrypter.cpp"
+            timestampString = "542641904.088418"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "201"
-            endingLineNumber = "201"
-            landmarkName = "find(const KeyType&amp; key)"
-            landmarkType = "9">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MyHash&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; &gt; &gt;*&gt;::find(std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; const&amp;) const"
-                  moduleName = "Project4"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/MyHash.h"
-                  timestampString = "542621723.22913"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "202"
-                  endingLineNumber = "202"
-                  offsetFromSymbolStart = "91">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MyHash&lt;int, std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; &gt;::find(int const&amp;) const"
-                  moduleName = "Project4"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/MyHash.h"
-                  timestampString = "542621723.2310309"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "202"
-                  endingLineNumber = "202"
-                  offsetFromSymbolStart = "61">
-               </Location>
-            </Locations>
+            startingLineNumber = "121"
+            endingLineNumber = "121"
+            landmarkName = "DecrypterImpl::crackHelper(const string&amp; ciphertext, Translator&amp; t, vector&lt;string&gt;&amp; output)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Project4/Decrypter.cpp"
+            timestampString = "542641904.088904"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "128"
+            endingLineNumber = "128"
+            landmarkName = "DecrypterImpl::crackHelper(const string&amp; ciphertext, Translator&amp; t, vector&lt;string&gt;&amp; output)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Project4/Decrypter.cpp"
+            timestampString = "542641904.089379"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "123"
+            endingLineNumber = "123"
+            landmarkName = "DecrypterImpl::crackHelper(const string&amp; ciphertext, Translator&amp; t, vector&lt;string&gt;&amp; output)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Project4/Decrypter.cpp"
+            timestampString = "542641904.0897321"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "167"
+            endingLineNumber = "167"
+            landmarkName = "DecrypterImpl::crackHelper(const string&amp; ciphertext, Translator&amp; t, vector&lt;string&gt;&amp; output)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

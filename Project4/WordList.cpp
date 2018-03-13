@@ -129,12 +129,8 @@ vector<string> WordListImpl::findCandidates(string cipherWord, string currTransl
     // cerr << "Pattern of cipherword: " << p << endl;
     vector<string>* const* vsp = m_wordPatternList.find(p);
     if (vsp != nullptr)
-    {
         for (int i = 0; i < (**vsp).size(); i++)
-        {
             potentialCand.push_back((**vsp)[i]);
-        }
-    }
     
     for (int i = 0; i < currTranslation.size(); i++)
     {

@@ -247,10 +247,11 @@ string Translator::getTranslation(const string& ciphertext) const
 //int main()
 //{
 //    Translator t;
-//    string s = "Lzdkgd dyrmjls shcg xdggkud fpm xd!!";
+//    string s = "Trcy oyc koon oz rweelycbb vmobcb, wyogrcn oecyb;";
 //    cerr << t.getTranslation(s) << endl;
-//    t.pushMapping("xdggkud", "message");
-//    t.pushMapping("dyrmjls", "eductor");
+//    t.pushMapping("rweelycbb", "battiness");
+//    assert(!t.pushMapping("oz", "oe"));
+//    cerr << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
 //    cerr << t.getTranslation(s) << endl;
 //    t.popMapping();
 //    cerr << t.getTranslation(s) << endl;

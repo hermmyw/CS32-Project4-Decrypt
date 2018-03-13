@@ -15,14 +15,14 @@ public:
     vector<string> crack(const string& ciphertext);
 private:
     WordList* m_wordList;
-    vector<bool> m_wordsChosen;
-    vector<string> crackHelper(const string& ciphertext, Translator& t, vector<string>& output);
+    MyHash<string, bool> m_visited;
+    void crackHelper(const string& ciphertext, Translator& t, vector<string>& output);
     bool fullyTranslated(const string& s) const;
     bool completeMessage(const string& message) const;
 };
 
 DecrypterImpl::DecrypterImpl()
-:m_wordsChosen(50, false)
+:m_visited(0.5)
 {
     m_wordList = new WordList;
 }
@@ -42,7 +42,10 @@ vector<string> DecrypterImpl::crack(const string& ciphertext)
     vector<string> output;
     Tokenizer token(",;:.!()[]{}-\"#$%^& ");
     vector<string> cipherWords = token.tokenize(ciphertext);
-    output = crackHelper(ciphertext, t, output);
+    for (int i = 0; i < cipherWords.size(); i++)
+        m_visited.associate((cipherWords[i]), false);
+    
+    crackHelper(ciphertext, t, output);
     
     // Insertion sort
     for (int i = 2; i < output.size() + 1; i++)
@@ -59,20 +62,25 @@ vector<string> DecrypterImpl::crack(const string& ciphertext)
     return output;
 }
 
-vector<string> DecrypterImpl::crackHelper(const string& ciphertext, Translator& t, vector<string>& output)
+void DecrypterImpl::crackHelper(const string& ciphertext, Translator& t, vector<string>& output)
 {
     Tokenizer token(",;:.!()[]{}-\"#$%^& ");
     vector<string> words = token.tokenize(ciphertext);
-    if (words.size() == 0)
-        return vector<string> ();
-
+    if (words.size() == 0 || ciphertext.size() == 0)
+        return;
+    bool finished = true;
+    for (int i = 0; i < words.size(); i++)
+        if (m_visited.find(words[i]) != nullptr && *(m_visited.find(words[i])) == false)
+            finished = false;
+    if (finished)
+        return;
     int maxQues = 0;
     size_t maxLength = 0;
     int index = 0;
     vector<string> partialTrans;
     for (int i = 0; i < words.size(); i++)
     {
-        if (!m_wordsChosen[i])
+        
         {
             partialTrans.push_back(t.getTranslation(words[i]));
             //cerr << partialTrans[i] << endl;
@@ -92,73 +100,45 @@ vector<string> DecrypterImpl::crackHelper(const string& ciphertext, Translator& 
         }
     }
     for (int i = 0; i < partialTrans.size(); i++)
-    {
-        // cerr << "Enter check " << endl;
         if (fullyTranslated(partialTrans[i]) && !m_wordList->contains(partialTrans[i]))
-        {
-            //            while (true)
-            //            {
-            //                if (t.popMapping())
-            //                    continue;
-            //                else
-            //                    break;
-            //            }
-            // cerr << "Wrong map, go back to the first word with empty map" << endl;
-            return vector<string>();
-        }
-    }
-    // cerr << endl;
-    // m_wordsChosen[index] = true;
+            return;
+    if (completeMessage(t.getTranslation(ciphertext)))
+        return;
+
     string w = words[index];
     string currTr = partialTrans[index];
-    if (currTr == "e??????" && w == "dyrmjls")
-        cerr << "Current mapping table: " << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
    
     vector<string> candidates;
     if (m_wordList != nullptr)
         candidates = m_wordList->findCandidates(w, currTr);
     if (candidates.empty())
     {
-        if (w == "O?ease")
-            cerr << "No candidates for " << w << endl;
-        // cerr << "Current mapping table: " << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
         t.popMapping();
-        return vector<string> ();
+        return;
     }
     
     string translation;
     for (int i = 0; i < candidates.size(); i++)
     {
-        // cerr << "Candidate " << i << candidates[i] << endl;
-        if (w == "dyrmjls" && i > 16)
-        {
-            cerr << candidates[i] << endl;
-            cerr << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
-        }
-        bool push = t.pushMapping(w, candidates[i]);
-        
-        if (!push)
+        if (candidates[i] == "aloofness")
+            cerr << "******Start over with " << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
+//        if (candidates[i] == "huffiness")
+//            cerr << "******FOUND" << endl;
+        if (!t.pushMapping(w, candidates[i]))
             continue;
-        cerr << "CANDIDATE: " << candidates[i] << endl;
         
-        // cerr << endl;
-        translation = "";
         translation = t.getTranslation(ciphertext);
-        // cerr << "Translation: " << translation << endl;
         Tokenizer token(",;:.!()[]{}-\"#$%^& ");
         vector<string> message = token.tokenize(translation);
         
         ///////EVALUATE///////
         if (completeMessage(translation))
         {
-            if (candidates[i] == "eductor")
-                cerr << "check complete message" << endl;
-            // cerr << "Complete" << endl;
-            cerr << "Complete with: " << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
             output.push_back(translation);
-            t.popMapping();
-            // m_wordsChosen[index] = false;
-            // cerr << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYC") << endl;
+            cerr << "Complete translation: " << translation << endl;
+            if (!t.popMapping())
+                return;
+            cerr << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
             continue;
         }
         
@@ -170,21 +150,11 @@ vector<string> DecrypterImpl::crackHelper(const string& ciphertext, Translator& 
             {
                 if (!m_wordList->contains(message[i]))
                 {
-                    cerr << message[i] << " is not in the wordlist." << endl;
-//                    while (true)
-//                    {
-//                        if (t.popMapping())
-//                            continue;
-//                        else
-//                            break;
-//                    }
-                    if (candidates[i] == "eductor")
-                        cerr << "check full word" << endl;
-                    t.popMapping();
+                    if (!t.popMapping())
+                        return;
                     promising = false;
                 }
-//                else
-//                    cerr << "Got one word: " << message[i] << endl;
+
             }
             for (int j = 0; j < message[i].size(); j++)
                 if (message[i][j] == '?')
@@ -194,44 +164,28 @@ vector<string> DecrypterImpl::crackHelper(const string& ciphertext, Translator& 
             continue;
         if (notComplete)
         {
-            if (candidates[i] == "eductor")
-                cerr << "after check full word" << endl;
-            cerr << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
             crackHelper(ciphertext, t, output);
+            // t.popMapping();
             continue;
         }
         
         
         for (int i = 0; i < message.size(); i++)
         {
-            cerr << "Enter check " << endl;
             if (fullyTranslated(message[i]) && !m_wordList->contains(message[i]))
             {
-//                while (true)
-//                {
-//                    if (t.popMapping())
-//                        continue;
-//                    else
-//                        break;
-//                }
                 t.popMapping();
-                cerr << "Wrong map, go back to the first word with empty map" << endl;
-                return vector<string>();
+                return;
             }
         }
-        // output.push_back(translation);
     }
-//    if (completeMessage(translation))
-//    {
-//        cerr << "Searched all candidates but " << endl;
-//        t.popMapping();
-//        cerr << "Return empty vector" << endl;
-//        return vector<string> ();
-////        for (int i = 0; i < 50; i++)
-////            m_wordsChosen[index] = false;
-//    }
+    bool* visited = m_visited.find(w);
+    if (visited != nullptr)
+        *visited = true;
+    cerr << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
     t.popMapping();
-    return output;
+    cerr << "AFTER POPPING " << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
+    return;
 }
 
 bool DecrypterImpl::fullyTranslated(const string& s) const
@@ -277,25 +231,20 @@ vector<string> Decrypter::crack(const string& ciphertext)
    return m_impl->crack(ciphertext);
 }
 
-//const string FILENAME = "/Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/testword.txt";
-//int main()
-//{
-//    Decrypter d;
-//    d.load(FILENAME);
-//    vector<string> s1 = d.crack("smxsdg ,;:.!()[]{}-\"#$%^& SGOSDG gfvgx!!");
-//    for (int i = 0; i < s1.size(); i++)
-//    {
-//        cerr << "Output: " << s1[i] << endl;
-//    }
-////    vector<string> s2 = d.crack("Lzdkgd dyrmjls shcg xdggkud fpm xd!!");
-////    for (int i = 0; i < s2.size(); i++)
-////    {
-////        cerr << "Output: " << s2[i] << endl;
-////    }
-////    vector<string> s = d.crack("rweelycbb vmobcb");
-////    for (int i = 0; i < s.size(); i++)
-////    {
-////        cerr << "Output: " << s[i] << endl;
-////    }
-//}
+const string FILENAME = "/Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/wordlist.txt";
+int main()
+{
+    Decrypter d;
+    d.load(FILENAME);
+    vector<string> s = d.crack("hjg ozgcy tc moox bo moya wg grc vmobck koon grwg tc ko yog bcc grc oyc trlvr rwb hccy oecyck zon jb. -Rcmcy Xcmmcn");
+    for (int i = 0; i < s.size(); i++)
+    {
+        cerr << "Output: " << s[i] << endl;
+    }
+    vector<string> s3 = d.crack("Jxwpjq qwrla glcu pcx qcn xkvv dw uclw ekarbbckpjwe dq jzw jzkpta jzrj qcn ekep'j ec jzrp dq jzw cpwa qcn eke ec. -Urls Jxrkp");
+    for (int i = 0; i < s3.size(); i++)
+    {
+        cerr << "Output: " << s3[i] << endl;
+    }
+}
 
