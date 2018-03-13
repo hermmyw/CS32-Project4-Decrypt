@@ -35,21 +35,13 @@ public:
     MyHash& operator=(const MyHash&) = delete;
     
 private:
-    // An open hash table:
-    // Buckets: Key, pointer to the values
-    // Nodes: Value, pointer to the next node
     struct Node
     {
         ValueType value;
         KeyType key;
+        bool used;
         Node* next;
     };
-    //    struct Bucket
-    //    {
-    //        Node* head;
-    //    };
-    
-    
     int m_size;
     int m_nItems;
     double m_maxLF;
@@ -69,25 +61,18 @@ MyHash<KeyType, ValueType>::MyHash(double maxLoadFactor)
     m_buckets = new Node*[NUM_BUCK];
     for (int i = 0; i < NUM_BUCK; i++)
     {
-        m_buckets[i] = nullptr;
+        m_buckets[i] = new Node;
+        m_buckets[i]->used = false;
     }
 }
 
 template<typename KeyType, typename ValueType>
 MyHash<KeyType, ValueType>::~MyHash()
 {
-//    for (int i = 0; i < m_size; i++)
-//    {
-//        Node* p = m_buckets[i];
-//        while (p != nullptr)
-//        {
-//            Node* d = p;
-//            p = p->next;
-//            delete d;
-//        }
-//        delete p;
-//        // delete m_buckets[i];
-//    }
+    for (int i = 0; i < m_size; i++)
+    {
+        delete m_buckets[i];
+    }
     delete [] m_buckets;
 }
 
@@ -102,30 +87,32 @@ void MyHash<KeyType, ValueType>::reset()
 template <class KeyType, class ValueType>
 void MyHash<KeyType, ValueType>::associate(const KeyType& key, const ValueType& value)
 {
-    Node* n = new Node;
-    n->value = value;
-    n->key = key;
-    n->next = nullptr;
-    
     // Find the bucket that the key corresponds to
     unsigned int hasher(const KeyType& key);
     unsigned int bucket = hasher(key) % m_size;
-    
+    Node* n = new Node;
+    n->value = value;
+    n->key = key;
+    n->used = true;
     // Look at the linked list in the bucket
-    Node* p = m_buckets[bucket];
-    if (p == nullptr)
-    {
-        m_buckets[bucket] = n;
-        m_nItems++;
-    }
-    else if (find(key) != nullptr)
+//    if (p == nullptr)
+//    {
+//        m_buckets[bucket] = n;
+//        m_nItems++;
+//    }
+//    else
+    if (find(key) != nullptr)
     {
         *(find(key)) = value;
-        delete n;
     }
     else
     {
         n->next = m_buckets[bucket];
+        if (m_buckets[bucket]->used == false)
+        {
+            // delete m_buckets[bucket];
+            n->next = nullptr;
+        }
         m_buckets[bucket] = n;
         m_nItems++;
     }
@@ -141,16 +128,14 @@ void MyHash<KeyType, ValueType>::resizeArray()
 {
     Node** newArray = new Node* [2 * m_size];
     for (int i = 0; i < 2 * m_size; i++)
-        newArray[i] = nullptr;
-    //    for (int i = 0; i < 2 * m_size; i++)
-    //        cerr << m_buckets[i] << " " << i << endl;
-    //    for (int i = 0; i < m_size; i++)
-    //        cerr << temp[i] << " " << i << endl;
-    
+    {
+        newArray[i] = new Node;
+        newArray[i]->used = false;
+    }
     for (int i = 0; i < m_size; i++)
     {
         Node* tempN = m_buckets[i];
-        while (tempN != nullptr)
+        while (tempN != nullptr && tempN->used)
         {
             KeyType tempK = tempN->key;
             ValueType tempV = tempN->value;
@@ -159,6 +144,7 @@ void MyHash<KeyType, ValueType>::resizeArray()
             Node* n = new Node;
             n->value = tempV;
             n->key = tempK;
+            n->used = true;
             n->next = nullptr;
         
             // find out where the target bucket is in newArray
@@ -166,13 +152,14 @@ void MyHash<KeyType, ValueType>::resizeArray()
             unsigned int bucket = hasher(tempK) % (2 * m_size);
             // cerr << "Key: " << tempK << ". At the new bucket: " << bucket << endl;
         
-            if (m_buckets[bucket] == nullptr)
-            {
-                // If the bucket has never been used,
-                // Assign the bucket to the new node
-                m_buckets[bucket] = n;
-            }
-            else if (find(tempK) != nullptr)
+//            if (m_buckets[bucket] == nullptr)
+//            {
+//                // If the bucket has never been used,
+//                // Assign the bucket to the new node
+//                m_buckets[bucket] = n;
+//            }
+//            else
+            if (find(tempK) != nullptr)
             {
                 *(find(tempK)) = tempV;
                 delete n;
@@ -180,6 +167,11 @@ void MyHash<KeyType, ValueType>::resizeArray()
             else
             {
                 n->next = m_buckets[bucket];
+                if (m_buckets[bucket]->used == false)
+                {
+                    // delete m_buckets[bucket];
+                    n->next = nullptr;
+                }
                 m_buckets[bucket] = n;
             }
             tempN = tempN->next;
@@ -199,7 +191,7 @@ const ValueType* MyHash<KeyType, ValueType>::find(const KeyType& key) const
     // cerr << bucket << endl;
     Node* p = m_buckets[bucket];
     // cerr << p << endl;
-    while (p != nullptr)
+    while (p != nullptr && p->used)
     {
         // cerr << "Key: " << p->key << endl;
         if  (p->key == key)
@@ -207,7 +199,7 @@ const ValueType* MyHash<KeyType, ValueType>::find(const KeyType& key) const
         else
             p = p->next;
     }
-    delete p;
+    // delete p;
     return nullptr;
 }
 
