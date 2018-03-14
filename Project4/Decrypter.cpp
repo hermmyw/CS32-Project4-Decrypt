@@ -236,7 +236,7 @@ vector<string> Decrypter::crack(const string& ciphertext)
 //{
 //    Decrypter d;
 //    d.load(FILENAME);
-//    vector<string> s3 = d.crack("ekarbbckpjwe");
+//    vector<string> s3 = d.crack("Trcy oyc koon oz rweelycbb vmobcb, wyogrcn oecyb; hjg ozgcy tc moox bo moya wg grc vmobck koon grwg tc ko yog bcc grc oyc trlvr rwb hccy oecyck zon jb. -Rcmcy Xcmmcn");
 //    for (int i = 0; i < s3.size(); i++)
 //        cerr << "Output: " << s3[i] << endl;
 //}

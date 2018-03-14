@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <cassert>
 using namespace std;
 
 class WordListImpl
@@ -16,9 +17,7 @@ public:
     bool contains(string word) const;
     vector<string> findCandidates(string cipherWord, string currTranslation) const;
 private:
-    // Key: word; Value: pattern
     MyHash<string, vector<string>> m_wordPatternList;
-    // MyHash<string, string> m_wordToPattern;
     string pattern(const string& s) const;
     void lowerCase(string& s) const;
 };
@@ -40,23 +39,20 @@ bool WordListImpl::loadWordList(string filename)
     {
         lowerCase(s);
         string p = pattern(s);
-            cerr << "FOUND: " << s << endl;
-        if (p == "abc" )
-            cerr << "Pattern: " << p << endl;
         
         if (m_wordPatternList.find(p) == nullptr)
         {
             vector<string> wordsWithSamePattern;
             wordsWithSamePattern.push_back(s);
+            cerr << "Pushed a new pattern: " << s << endl;
             m_wordPatternList.associate(p, wordsWithSamePattern);
         }
         else
         {
+            cerr << "Add to the pattern " << p << " with " << s << endl;
             (*m_wordPatternList.find(p)).push_back(s);
-            // m_wordPatternList.associate(p, *(m_wordPatternList.find(p)));
         }
     }
-    cerr << "Load" << endl;
     return true;
     
 }
@@ -68,9 +64,9 @@ bool WordListImpl::contains(string word) const
     string p = pattern(word);
     cerr << p << endl;
     vector<string> const* wordsPtr = m_wordPatternList.find(p);
+    cerr << wordsPtr << endl;
     if (wordsPtr != nullptr)
     {
-        cerr << "Word list ";
         for (vector<string>::const_iterator p = (*wordsPtr).begin(); p != (*wordsPtr).end(); p++)
         {
             cerr << *p << endl;
@@ -221,15 +217,14 @@ vector<string> WordList::findCandidates(string cipherWord, string currTranslatio
 
 
 
-
 const string FILENAME = "/Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/wordlist.txt";
-int main()
+void testwl()
 {
     WordList w;
     w.loadWordList(FILENAME);
-    assert(w.contains("Balloon"));
-    assert(w.contains("ballo"));
-    assert(w.contains("aahed"));
+    assert(w.contains("academicianship"));
+    assert(w.contains("'n'"));
+    assert(w.contains("'em"));
     assert(w.contains("sinuateS"));
     assert(!w.contains("csdjhwdc"));
     assert(!w.contains("dasc"));
@@ -237,6 +232,10 @@ int main()
     vector<string> cand = w.findCandidates("bdttook", "???????");
     for (int i = 0; i < cand.size(); i++)
         cerr << cand[i] << endl;
-    return 0;
+}
+
+int main()
+{
+    testwl();
 }
 
