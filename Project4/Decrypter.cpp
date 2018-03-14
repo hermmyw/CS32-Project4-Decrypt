@@ -231,20 +231,13 @@ vector<string> Decrypter::crack(const string& ciphertext)
    return m_impl->crack(ciphertext);
 }
 
-const string FILENAME = "/Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/wordlist.txt";
-int main()
-{
-    Decrypter d;
-    d.load(FILENAME);
-    vector<string> s = d.crack("hjg ozgcy tc moox bo moya wg grc vmobck koon grwg tc ko yog bcc grc oyc trlvr rwb hccy oecyck zon jb. -Rcmcy Xcmmcn");
-    for (int i = 0; i < s.size(); i++)
-    {
-        cerr << "Output: " << s[i] << endl;
-    }
-    vector<string> s3 = d.crack("Jxwpjq qwrla glcu pcx qcn xkvv dw uclw ekarbbckpjwe dq jzw jzkpta jzrj qcn ekep'j ec jzrp dq jzw cpwa qcn eke ec. -Urls Jxrkp");
-    for (int i = 0; i < s3.size(); i++)
-    {
-        cerr << "Output: " << s3[i] << endl;
-    }
-}
+//const string FILENAME = "/Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/wordlist.txt";
+//int main()
+//{
+//    Decrypter d;
+//    d.load(FILENAME);
+//    vector<string> s3 = d.crack("ekarbbckpjwe");
+//    for (int i = 0; i < s3.size(); i++)
+//        cerr << "Output: " << s3[i] << endl;
+//}
 

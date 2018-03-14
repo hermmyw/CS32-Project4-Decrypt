@@ -5,6 +5,7 @@
 #include <functional>
 #include <algorithm>
 #include <fstream>
+#include <iostream>
 using namespace std;
 
 class WordListImpl
@@ -16,7 +17,7 @@ public:
     vector<string> findCandidates(string cipherWord, string currTranslation) const;
 private:
     // Key: word; Value: pattern
-    MyHash<string, vector<string>*> m_wordPatternList;
+    MyHash<string, vector<string>> m_wordPatternList;
     // MyHash<string, string> m_wordToPattern;
     string pattern(const string& s) const;
     void lowerCase(string& s) const;
@@ -32,84 +33,57 @@ bool WordListImpl::loadWordList(string filename)
         m_wordPatternList.reset();
     ifstream infile(filename);
     if(!infile)
-    {
-        // cerr << "Cannot open " << filename << endl;
         return false;
-    }
     
     string s;
     while (getline(infile, s))
     {
         lowerCase(s);
-//        unsigned int hash(const string& s);
-//        int bucket = hash(s) % NUM_BUCK;
-        // find the letter pattern of this word
         string p = pattern(s);
-        // m_wordToPattern.associate(s, p);
-        // check if the letter pattern has appeared in the hash table
-        vector<string>** wordsPtr = m_wordPatternList.find(p);
+            cerr << "FOUND: " << s << endl;
+        if (p == "abc" )
+            cerr << "Pattern: " << p << endl;
         
-        // if hasn't, create a vector of words
-        // and add the word.
-        if (wordsPtr == nullptr)
+        if (m_wordPatternList.find(p) == nullptr)
         {
-            vector<string>* wordsWithSamePattern = new vector<string>;
-            (*wordsWithSamePattern).push_back(s);
-//            for (int i = 0; i < (*wordsWithSamePattern).size(); i++)
-//                cerr << (*wordsWithSamePattern)[i] << endl;
+            vector<string> wordsWithSamePattern;
+            wordsWithSamePattern.push_back(s);
             m_wordPatternList.associate(p, wordsWithSamePattern);
         }
-        // if it has appeared, add the word to the vector
         else
         {
-            (*wordsPtr)->push_back(s);
-//            for (int i = 0; i < (**wordsPtr).size(); i++)
-//                cerr << (**wordsPtr)[i] << endl;
-            // add/update the vector of words of the letter pattern
-            m_wordPatternList.associate(p, *(wordsPtr));
+            (*m_wordPatternList.find(p)).push_back(s);
+            // m_wordPatternList.associate(p, *(m_wordPatternList.find(p)));
         }
     }
-    // number of patterns
-    // cerr << m_wordPatternList.getNumItems() << endl;
-    // cerr << m_wordToPattern.getNumItems() << endl;
+    cerr << "Load" << endl;
     return true;
     
 }
 
 bool WordListImpl::contains(string word) const
 {
-    // Case-insensitive
     lowerCase(word);
-    
+    cerr << word << endl;
     string p = pattern(word);
-    // cerr << "pattern: " << p << endl;
-    vector<string>* const* wordsPtr = m_wordPatternList.find(p);   // O(1)
-    if (wordsPtr == nullptr)
+    cerr << p << endl;
+    vector<string> const* wordsPtr = m_wordPatternList.find(p);
+    if (wordsPtr != nullptr)
     {
-        //cerr << "The Pattern is not found" << endl;
-        return false;
-    }
-    else
-    {
-//        for (int i = 0; i < (**wordsPtr).size(); i++)
-//            cerr << (**wordsPtr)[i] << endl;
-        if ((find((**wordsPtr).begin(), (**wordsPtr).end(), word)) != (**wordsPtr).end())
+        cerr << "Word list ";
+        for (vector<string>::const_iterator p = (*wordsPtr).begin(); p != (*wordsPtr).end(); p++)
         {
-            // cerr << "Found" << endl;
-            return true;
-        }
-        else
-        {
-            // cerr << "The pattern is found, but the word is not found" << endl;
-            return false;
+            cerr << *p << endl;
+            if (*p == word)
+                return true;
         }
     }
-    
-    // return (m_wordToPattern.find(word) != nullptr);
+    return false;
 }
 
 vector<string> WordListImpl::findCandidates(string cipherWord, string currTranslation) const
 {
+    cerr << "Finding candidates for " << cipherWord << endl;
     if (cipherWord.size() != currTranslation.size())
         return vector<string> ();
     for (int i = 0; i < cipherWord.size(); i++)
@@ -126,11 +100,11 @@ vector<string> WordListImpl::findCandidates(string cipherWord, string currTransl
     vector<string> potentialCand;
     string p;
     p = pattern(cipherWord);
-    // cerr << "Pattern of cipherword: " << p << endl;
-    vector<string>* const* vsp = m_wordPatternList.find(p);
+    vector<string> const* vsp = m_wordPatternList.find(p);
     if (vsp != nullptr)
-        for (int i = 0; i < (**vsp).size(); i++)
-            potentialCand.push_back((**vsp)[i]);
+        for (int i = 0; i < (*vsp).size(); i++)
+            potentialCand.push_back((*vsp)[i]);
+    cerr << potentialCand.size() << endl;
     
     for (int i = 0; i < currTranslation.size(); i++)
     {
@@ -141,6 +115,7 @@ vector<string> WordListImpl::findCandidates(string cipherWord, string currTransl
         if (currTranslation[i] == '\'' && cipherWord[i] != '\'')
             return vector<string>();
     }
+    
     for (int i = 0; i < potentialCand.size(); i++)
     {
         bool isCand = true;
@@ -247,21 +222,21 @@ vector<string> WordList::findCandidates(string cipherWord, string currTranslatio
 
 
 
-//const string FILENAME = "/Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/wordlist.txt";
-//int main()
-//{
-//    WordList w;
-//    w.loadWordList(FILENAME);
-//    assert(w.contains("Balloon"));
-//    assert(w.contains("'em"));
-//    assert(w.contains("arbItrariness"));
-//    assert(w.contains("sinuateS"));
-//    assert(!w.contains("csdjhwdc"));
-//    assert(!w.contains("dasc"));
-//    assert(!w.contains("vrwjy"));
-//    vector<string> cand = w.findCandidates("bdttook", "???????");
-//    for (int i = 0; i < cand.size(); i++)
-//        cerr << cand[i] << endl;
-//    return 0;
-//}
+const string FILENAME = "/Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/wordlist.txt";
+int main()
+{
+    WordList w;
+    w.loadWordList(FILENAME);
+    assert(w.contains("Balloon"));
+    assert(w.contains("ballo"));
+    assert(w.contains("aahed"));
+    assert(w.contains("sinuateS"));
+    assert(!w.contains("csdjhwdc"));
+    assert(!w.contains("dasc"));
+    assert(!w.contains("vrwjy"));
+    vector<string> cand = w.findCandidates("bdttook", "???????");
+    for (int i = 0; i < cand.size(); i++)
+        cerr << cand[i] << endl;
+    return 0;
+}
 

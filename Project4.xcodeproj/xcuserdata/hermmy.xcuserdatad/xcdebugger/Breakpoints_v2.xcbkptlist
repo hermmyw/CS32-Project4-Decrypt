@@ -58,11 +58,11 @@
             ignoreCount = "2"
             continueAfterRunningActions = "No"
             filePath = "Project4/WordList.cpp"
-            timestampString = "542641904.083691"
+            timestampString = "542706243.675064"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "163"
-            endingLineNumber = "163"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
             landmarkName = "WordListImpl::findCandidates(string cipherWord, string currTranslation)"
             landmarkType = "7">
          </BreakpointContent>
@@ -74,7 +74,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Project4/Decrypter.cpp"
-            timestampString = "542694992.124452"
+            timestampString = "542706243.675528"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "171"
@@ -90,7 +90,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Project4/Decrypter.cpp"
-            timestampString = "542694992.129437"
+            timestampString = "542706243.67591"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "165"
@@ -106,7 +106,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Project4/Decrypter.cpp"
-            timestampString = "542694992.129627"
+            timestampString = "542706243.67626"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "161"
@@ -122,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Project4/WordList.cpp"
-            timestampString = "542641904.08725"
+            timestampString = "542706243.676634"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
+            startingLineNumber = "139"
+            endingLineNumber = "139"
             landmarkName = "WordListImpl::findCandidates(string cipherWord, string currTranslation)"
             landmarkType = "7">
          </BreakpointContent>
@@ -202,7 +202,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Project4/p4sanity.cpp"
-            timestampString = "542613925.6407779"
+            timestampString = "542699443.702734"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "72"
@@ -218,7 +218,7 @@
             ignoreCount = "15"
             continueAfterRunningActions = "No"
             filePath = "Project4/Decrypter.cpp"
-            timestampString = "542694992.129835"
+            timestampString = "542706243.677155"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "65"
@@ -234,7 +234,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Project4/Decrypter.cpp"
-            timestampString = "542694992.130005"
+            timestampString = "542706243.677478"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "121"
@@ -250,7 +250,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Project4/Decrypter.cpp"
-            timestampString = "542694992.130161"
+            timestampString = "542706243.677707"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "128"
@@ -266,7 +266,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Project4/Decrypter.cpp"
-            timestampString = "542694992.1303149"
+            timestampString = "542706243.6779881"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "123"
@@ -282,13 +282,45 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Project4/Decrypter.cpp"
-            timestampString = "542694992.130466"
+            timestampString = "542706243.6782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "167"
             endingLineNumber = "167"
             landmarkName = "DecrypterImpl::crackHelper(const string&amp; ciphertext, Translator&amp; t, vector&lt;string&gt;&amp; output)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Project4/WordList.cpp"
+            timestampString = "542706243.6784101"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "58"
+            endingLineNumber = "58"
+            landmarkName = "WordListImpl::loadWordList(string filename)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Project4/p4sanity.cpp"
+            timestampString = "542703831.934654"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
+            landmarkName = "createWordListFile()"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

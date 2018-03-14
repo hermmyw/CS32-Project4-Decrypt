@@ -18,10 +18,10 @@ using namespace std;
 // YET READY TO TEST
 
 const bool shouldTestMyHash = true;
-const bool shouldTestTokenizer = false;
-const bool shouldTestWordList = false;
-const bool shouldTestTranslator = false;
-const bool shouldTestDecrypter = false;
+const bool shouldTestTokenizer = true;
+const bool shouldTestWordList = true;
+const bool shouldTestTranslator = true;
+const bool shouldTestDecrypter = true;
 
 // **************************************************************
 
