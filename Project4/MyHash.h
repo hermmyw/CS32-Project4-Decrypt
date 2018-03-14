@@ -3,7 +3,7 @@
 
 #include <cassert>
 #include <string>
-
+#include <iostream>
 using namespace std;
 
 const int NUM_BUCK = 100;
@@ -118,36 +118,42 @@ void MyHash<KeyType, ValueType>::associate(const KeyType& key, const ValueType& 
         m_buckets[bucket]->key = key;
         m_buckets[bucket]->value = value;
         m_buckets[bucket]->next = nullptr;
-        return;
+        m_nItems++;
     }
     else
     {
+        bool update = false;
         while(p != nullptr)
         {
             if (p->key == key)
             {
                 p->value = value;
-                return;
+                update = true;
             }
             p = p->next;
         }
-        Node* n = new Node;
-        n->key = key;
-        n->value = value;
-        n->next = m_buckets[bucket];
-        m_buckets[bucket] = n;
+        if (!update)
+        {
+            Node* n = new Node;
+            n->key = key;
+            n->value = value;
+            n->next = m_buckets[bucket];
+            m_buckets[bucket] = n;
+            m_nItems++;
+        }
     }
-    m_nItems++;
-
-    if (getLoadFactor() > m_maxLF)
+    if (getLoadFactor() >= 0.5)
+    {
         resizeArray();
+    }
 }
 
 template <class KeyType, class ValueType>
 void MyHash<KeyType, ValueType>::resizeArray()
 {
-    //cerr << "******RESIZING*******" << endl;
+    // cerr << "******RESIZING*******" << endl;
     m_size *= 2;
+    cerr << m_size << endl;
     Node** newArray = new Node*[m_size];
     for (int i = 0; i < m_size; i++)
         newArray[i] = nullptr;
@@ -213,6 +219,6 @@ int MyHash<KeyType, ValueType>::getNumItems() const
 template <class KeyType, class ValueType>
 double MyHash<KeyType, ValueType>::getLoadFactor() const
 {
-    return (m_nItems * 1.0 / m_size);
+    return (getNumItems() * 1.0 / m_size);
 }
 #endif
