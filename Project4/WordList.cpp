@@ -44,12 +44,12 @@ bool WordListImpl::loadWordList(string filename)
         {
             vector<string> wordsWithSamePattern;
             wordsWithSamePattern.push_back(s);
-            cerr << "Pushed a new pattern: " << s << endl;
+            // cerr << "Pushed a new pattern: " << s << endl;
             m_wordPatternList.associate(p, wordsWithSamePattern);
         }
         else
         {
-            cerr << "Add to the pattern " << p << " with " << s << endl;
+            // cerr << "Add to the pattern " << p << " with " << s << endl;
             (*m_wordPatternList.find(p)).push_back(s);
         }
     }
@@ -60,26 +60,17 @@ bool WordListImpl::loadWordList(string filename)
 bool WordListImpl::contains(string word) const
 {
     lowerCase(word);
-    cerr << word << endl;
     string p = pattern(word);
-    cerr << p << endl;
     vector<string> const* wordsPtr = m_wordPatternList.find(p);
-    cerr << wordsPtr << endl;
     if (wordsPtr != nullptr)
-    {
         for (vector<string>::const_iterator p = (*wordsPtr).begin(); p != (*wordsPtr).end(); p++)
-        {
-            cerr << *p << endl;
             if (*p == word)
                 return true;
-        }
-    }
     return false;
 }
 
 vector<string> WordListImpl::findCandidates(string cipherWord, string currTranslation) const
 {
-    cerr << "Finding candidates for " << cipherWord << endl;
     if (cipherWord.size() != currTranslation.size())
         return vector<string> ();
     for (int i = 0; i < cipherWord.size(); i++)
@@ -100,7 +91,6 @@ vector<string> WordListImpl::findCandidates(string cipherWord, string currTransl
     if (vsp != nullptr)
         for (int i = 0; i < (*vsp).size(); i++)
             potentialCand.push_back((*vsp)[i]);
-    cerr << potentialCand.size() << endl;
     
     for (int i = 0; i < currTranslation.size(); i++)
     {
@@ -234,8 +224,8 @@ void testwl()
         cerr << cand[i] << endl;
 }
 
-int main()
-{
-    testwl();
-}
+//int main()
+//{
+//    testwl();
+//}
 

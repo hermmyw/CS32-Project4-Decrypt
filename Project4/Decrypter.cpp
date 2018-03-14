@@ -101,7 +101,10 @@ void DecrypterImpl::crackHelper(const string& ciphertext, Translator& t, vector<
     }
     for (int i = 0; i < partialTrans.size(); i++)
         if (fullyTranslated(partialTrans[i]) && !m_wordList->contains(partialTrans[i]))
+        {
+            t.popMapping();
             return;
+        }
     if (completeMessage(t.getTranslation(ciphertext)))
         return;
 
@@ -231,13 +234,20 @@ vector<string> Decrypter::crack(const string& ciphertext)
    return m_impl->crack(ciphertext);
 }
 
-//const string FILENAME = "/Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/wordlist.txt";
-//int main()
-//{
-//    Decrypter d;
-//    d.load(FILENAME);
-//    vector<string> s3 = d.crack("Trcy oyc koon oz rweelycbb vmobcb, wyogrcn oecyb; hjg ozgcy tc moox bo moya wg grc vmobck koon grwg tc ko yog bcc grc oyc trlvr rwb hccy oecyck zon jb. -Rcmcy Xcmmcn");
-//    for (int i = 0; i < s3.size(); i++)
-//        cerr << "Output: " << s3[i] << endl;
-//}
+
+const string FILENAME = "/Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/wordlist.txt";
+
+void testDe()
+{
+    Decrypter d;
+    d.load(FILENAME);
+    vector<string> s3 = d.crack("Vxgvab sovi jh");
+    for (int i = 0; i < s3.size(); i++)
+        cerr << "Output: " << s3[i] << endl;
+}
+
+int main()
+{
+    testDe();
+}
 

@@ -216,17 +216,21 @@ string Translator::getTranslation(const string& ciphertext) const
 
 
 
+void testTr()
+{
+    Translator t;
+    string s = "Trcy oyc koon oz rweelycbb vmobcb, wyogrcn oecyb;";
+    cerr << t.getTranslation(s) << endl;
+    t.pushMapping("rweelycbb", "battiness");
+    assert(!t.pushMapping("oz", "oe"));
+    cerr << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
+    cerr << t.getTranslation(s) << endl;
+    t.popMapping();
+    cerr << t.getTranslation(s) << endl;
+}
 
 //int main()
 //{
-//    Translator t;
-//    string s = "Trcy oyc koon oz rweelycbb vmobcb, wyogrcn oecyb;";
-//    cerr << t.getTranslation(s) << endl;
-//    t.pushMapping("rweelycbb", "battiness");
-//    assert(!t.pushMapping("oz", "oe"));
-//    cerr << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
-//    cerr << t.getTranslation(s) << endl;
-//    t.popMapping();
-//    cerr << t.getTranslation(s) << endl;
+//    testTr();
 //}
 
