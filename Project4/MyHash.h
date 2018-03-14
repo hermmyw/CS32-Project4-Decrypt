@@ -137,12 +137,9 @@ void MyHash<KeyType, ValueType>::associate(const KeyType& key, const ValueType& 
     
     if (getLoadFactor() > m_maxLF)
     {
-        // allocate new bigger dynamic array
+        // allocate a new bigger dynamic array
         resizeArray();
-        //        for (int i = 0; i < m_size; i++)
-        //            cerr << m_buckets[i] << " " << i << endl;
     }
-    // cerr << "Leave associate" << endl << endl;
 }
 
 template <class KeyType, class ValueType>
@@ -152,11 +149,6 @@ void MyHash<KeyType, ValueType>::resizeArray()
     m_buckets = new Node* [2 * m_size];
     for (int i = 0; i < 2 * m_size; i++)
         m_buckets[i] = nullptr;
-    //    for (int i = 0; i < 2 * m_size; i++)
-    //        cerr << m_buckets[i] << " " << i << endl;
-    //    for (int i = 0; i < m_size; i++)
-    //        cerr << temp[i] << " " << i << endl;
-    
     for (int i = 0; i < m_size; i++)
     {
         if (temp[i] != nullptr)
@@ -187,7 +179,6 @@ void MyHash<KeyType, ValueType>::resizeArray()
                     // If the bucket has never been used,
                     // Assign the bucket to the new node
                     m_buckets[bucket] = n;
-                    // cerr << "New Array: ADD NEW" << endl;
                 }
                 else
                 {
@@ -197,7 +188,6 @@ void MyHash<KeyType, ValueType>::resizeArray()
                         {
                             p->value = tempV;
                             n = nullptr;
-                            // // cerr << "New Array: UPDATE" << endl;
                             break;
                         }
                         p = p->next;
@@ -209,23 +199,12 @@ void MyHash<KeyType, ValueType>::resizeArray()
                     }
                     else
                         delete n;
-                    // cerr << "New Array: ADD" << endl;
                 }
                 tempN = tempN->next;
             }
         }
     }
-    
-    //    for (int i = 0; i < 2 * m_size; i++)
-    //    {
-    //        if (m_buckets[i] == nullptr)
-    //            cerr << "Empty Bucket at " << i << endl;
-    //        else
-    //            cerr << "Key: " << m_buckets[i]->key << endl << "  Value:" << m_buckets[i]->value << endl;
-    //    }
-    //    cerr << "New load factor " << (m_nItems * 1.0 / (2 * m_size)) << endl;
     m_size *= 2;
-    //    cerr << "New size " << m_size << endl;
     delete [] temp;
 }
 
