@@ -64,130 +64,108 @@ vector<string> DecrypterImpl::crack(const string& ciphertext)
 
 void DecrypterImpl::crackHelper(const string& ciphertext, Translator& t, vector<string>& output)
 {
-    Tokenizer token(",;:.!()[]{}-\"#$%^& ");
+    // 0. Base case
+    if (ciphertext.size() == 0)
+        return;
+    // 1. Break up the ciphertext
+    Tokenizer token("1234567890,;:.!()[]{}-\"#$%^& ");
     vector<string> words = token.tokenize(ciphertext);
-    if (words.size() == 0 || ciphertext.size() == 0)
-        return;
-    bool finished = true;
-    for (int i = 0; i < words.size(); i++)
-        if (m_visited.find(words[i]) != nullptr && *(m_visited.find(words[i])) == false)
-            finished = false;
-    if (finished)
-        return;
+    
+    // 2. Pick the word
+         // (1) Not chosen
+         // (2) Has the most '?'
     int maxQues = 0;
     size_t maxLength = 0;
     int index = 0;
     vector<string> partialTrans;
     for (int i = 0; i < words.size(); i++)
     {
-        
+        partialTrans.push_back(t.getTranslation(words[i]));
+        int nQues = 0;
+        size_t size = partialTrans[i].size();
+        for (int j = 0; j < partialTrans[i].size(); j++)
         {
-            partialTrans.push_back(t.getTranslation(words[i]));
-            //cerr << partialTrans[i] << endl;
-            int nQues = 0;
-            size_t size = partialTrans[i].size();
-            for (int j = 0; j < partialTrans[i].size(); j++)
-            {
-                if (partialTrans[i][j] == '?')
-                    nQues++;
-            }
-            if (nQues > maxQues && size > maxLength)
-            {
-                index = i;
-                maxQues = nQues;
-                maxLength = size;
-            }
+            if (partialTrans[i][j] == '?')
+                nQues++;
+        }
+        if (nQues > maxQues && size > maxLength)
+        {
+            index = i;
+            maxQues = nQues;
+            maxLength = size;
         }
     }
-    for (int i = 0; i < partialTrans.size(); i++)
-        if (fullyTranslated(partialTrans[i]) && !m_wordList->contains(partialTrans[i]))
-        {
-            t.popMapping();
-            return;
-        }
-    if (completeMessage(t.getTranslation(ciphertext)))
-        return;
-
     string w = words[index];
     string currTr = partialTrans[index];
    
+    // 4. Find candidates
     vector<string> candidates;
     if (m_wordList != nullptr)
         candidates = m_wordList->findCandidates(w, currTr);
+    
+    // 5. Empty candidates
     if (candidates.empty())
     {
         t.popMapping();
         return;
     }
     
+    // 6. Examine the candidates
     string translation;
     for (int i = 0; i < candidates.size(); i++)
     {
-        if (candidates[i] == "aloofness")
-            cerr << "******Start over with " << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
-//        if (candidates[i] == "huffiness")
-//            cerr << "******FOUND" << endl;
-        if (!t.pushMapping(w, candidates[i]))
+        // 6a. Push the new mapping
+        Translator temp;
+        string plaintext;
+        string ct;
+        string currMap = t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        for (int i = 0; i < currMap.size(); i++)
+        {
+            if (currMap[i] != '?' && isalpha(currMap[i]))
+            {
+                ct += 'A' + i;
+                plaintext += currMap[i];
+            }
+        }
+        if (!temp.pushMapping(ct, plaintext))
+            exit(1);
+        if (!temp.pushMapping(w, candidates[i]))
             continue;
         
-        translation = t.getTranslation(ciphertext);
+        // 6b. Translate the ciphertext
+        translation = temp.getTranslation(ciphertext);
         Tokenizer token(",;:.!()[]{}-\"#$%^& ");
         vector<string> message = token.tokenize(translation);
         
-        ///////EVALUATE///////
+        // 6c. Evaluate
         if (completeMessage(translation))
         {
+            // Message is complete
             output.push_back(translation);
-            cerr << "Complete translation: " << translation << endl;
-            if (!t.popMapping())
-                return;
-            cerr << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
+            temp.popMapping();
             continue;
         }
-        
-        bool notComplete = false;
-        bool promising = true;
-        for (int i = 0; i < message.size(); i++)
+        else
         {
-            if (fullyTranslated(message[i]))
+            bool valid = true;
+            for (int i = 0; i < message.size(); i++)
             {
-                if (!m_wordList->contains(message[i]))
+                // Message is not complete, a fully translated word is not in the wordlist
+                if (fullyTranslated(message[i]) && !m_wordList->contains(message[i]))
                 {
-                    if (!t.popMapping())
-                        return;
-                    promising = false;
+                    temp.popMapping();
+                    valid = false;
                 }
-
             }
-            for (int j = 0; j < message[i].size(); j++)
-                if (message[i][j] == '?')
-                    notComplete = true;
-        }
-        if (!promising)
-            continue;
-        if (notComplete)
-        {
-            crackHelper(ciphertext, t, output);
-            // t.popMapping();
-            continue;
-        }
-        
-        
-        for (int i = 0; i < message.size(); i++)
-        {
-            if (fullyTranslated(message[i]) && !m_wordList->contains(message[i]))
-            {
-                t.popMapping();
-                return;
-            }
+            if (!valid)
+                continue;
+            
+            // Message is not complete, all fully translated words are in the wordlist
+            crackHelper(ciphertext, temp, output);
         }
     }
-    bool* visited = m_visited.find(w);
-    if (visited != nullptr)
-        *visited = true;
-    cerr << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
+    // 7. After checking all the candidates
     t.popMapping();
-    cerr << "AFTER POPPING " << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
     return;
 }
 
@@ -201,11 +179,18 @@ bool DecrypterImpl::fullyTranslated(const string& s) const
 
 bool DecrypterImpl::completeMessage(const string& message) const
 {
-    Tokenizer token(",;:.!()[]{}-\"#$%^& ");
+    if (message.size() == 0)
+        return false;
+    Tokenizer token("1234567890,;:.!()[]{}-\"#$%^& ");
     vector<string> words = token.tokenize(message);
     for (int i = 0; i < words.size(); i++)
-        if (!fullyTranslated(words[i]) || !m_wordList->contains(words[i]))
+    {
+        if (fullyTranslated(words[i]) && !m_wordList->contains(words[i]))
             return false;
+        for (int j = 0; j < words[i].size(); j++)
+            if (words[i][j] == '?')
+                return false;
+    }
     return true;
 }
 
@@ -241,9 +226,29 @@ void testDe()
 {
     Decrypter d;
     d.load(FILENAME);
-    vector<string> s3 = d.crack("Vxgvab sovi jh");
+    vector<string> s0 = d.crack("Jxwpjq qwrla glcu pcx qcn xkvv dw uclw ekarbbckpjwe dq jzw jzkpta jzrj qcn ekep'j ec jzrp dq jzw cpwa qcn eke ec. -Urls Jxrkp");
+    for (int i = 0; i < s0.size(); i++)
+        cerr << "Output: " << s0[i] << endl;
+    vector<string> s1 = d.crack("Xjzwq gjz cuvq xz huri arwqvudiy fuk ufjrqoq svquxiy. -Lzjk Nqkkqcy");
+    for (int i = 0; i < s1.size(); i++)
+        cerr << "Output: " << s1[i] << endl;
+    vector<string> s2 = d.crack("Trcy oyc koon oz rweelycbb vmobcb, wyogrcn oecyb; hjg ozgcy tc moox bo moya wg grc vmobck koon grwg tc ko yog bcc grc oyc trlvr rwb hccy oecyck zon jb. -Rcmcy Xcmmcn");
+    for (int i = 0; i < s2.size(); i++)
+        cerr << "Output: " << s2[i] << endl;
+    vector<string> s3 = d.crack("Axevfvu lvnelvp bxqp mvpprjv rgl bvoop Grnxvgkvuj dqupb jvbp buvrbvl be lqggvu.");
     for (int i = 0; i < s3.size(); i++)
         cerr << "Output: " << s3[i] << endl;
+    vector<string> s4 = d.crack("Lzdkgd dyrmjls shcg xdggkud fpm xd!!");
+    for (int i = 0; i < s4.size(); i++)
+        cerr << "Output: " << s4[i] << endl;
+    vector<string> s5 = d.crack("Ojvgtv vcrpxok kfwt uvttgiv byp uv!!");
+    for (int i = 0; i < s5.size(); i++)
+        cerr << "Output: " << s5[i] << endl;
+    vector<string> s6 = d.crack("y qook ra bdttook yqkook.");
+    for (int i = 0; i < s6.size(); i++)
+        cerr << "Output: " << s6[i] << endl;
+    
+
 }
 
 int main()
