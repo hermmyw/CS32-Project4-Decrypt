@@ -2,7 +2,6 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <iostream>
 using namespace std;
 
 class TokenizerImpl
@@ -61,23 +60,23 @@ vector<string> Tokenizer::tokenize(const std::string& s) const
 }
 
 
-
-
-
-
-//
-//
-//int main()
+//void testToken()
 //{
-//    Tokenizer t(" ,.!");
-//    vector<string> v = t.tokenize("This,, is a test! It's the... best!");
+//    Tokenizer t("0123456789,;:.!()[]{}-\"#$%^& ");
+//    vector<string> v = t.tokenize("125312863");
+//    cerr << v.size() << endl;
 //    for (int i = 0; i < v.size(); i++)
-//        cout << v[i] << endl;
-//
+//        cerr << v[i] << endl;
+//    
 //    string s = "!!!!!";
 //    v = t.tokenize(s);
+//    cerr << v.size() << endl;
 //    for (int i = 0; i < v.size(); i++)
-//        cout << v[i] << endl;
-//
+//        cerr << v[i] << endl;
+//}
+
+//int main()
+//{
+//    testToken();
 //}
 

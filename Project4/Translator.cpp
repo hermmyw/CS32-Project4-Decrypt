@@ -1,7 +1,5 @@
 #include "provided.h"
 #include <string>
-#include <cassert>
-#include <iostream>
 using namespace std;
 
 class TranslatorImpl
@@ -97,22 +95,17 @@ bool TranslatorImpl::pushMapping(string ciphertext, string plaintext)
             return false;
     }
     for (int i = 0; i < plaintext.size(); i++)
-    {
         for (int j = 0; j < 26; j++)
-        {
             if (plaintext[i] == m_mappingTable[1][j] && ciphertext[i] != m_mappingTable[0][j])
                 return false;
-        }
-    }
 
-    
+    m_mappingStack.push(m_mappingTable);
     for (int i = 0; i < ciphertext.size(); i++)
     {
         int index = ciphertext[i] - 'A';
         if (m_mappingTable[0][index] == ciphertext[i] && m_mappingTable[1][index] == '?')
             m_mappingTable[1][index] = plaintext[i];
     }
-    m_mappingStack.push(m_mappingTable);
     return true;
 }
 
@@ -120,10 +113,8 @@ bool TranslatorImpl::popMapping()
 {
     if (m_mappingStack.m_head == nullptr)
         return false;
-
-    m_mappingStack.pop();
     
-    // Restoring the old one
+    // Restoring the top one to the current mapping table
     Node* top = m_mappingStack.top();
     if (top != nullptr)
     {
@@ -133,14 +124,7 @@ bool TranslatorImpl::popMapping()
             m_mappingTable[1][i] = top->m_map[1][i];
         }
     }
-    else
-    {
-        for (int i = 0; i < 26; i++)
-        {
-            m_mappingTable[0][i] = 'A' + i;
-            m_mappingTable[1][i] = '?';
-        }
-    }
+    m_mappingStack.pop();
     return true;
 }
 
@@ -216,18 +200,18 @@ string Translator::getTranslation(const string& ciphertext) const
 
 
 
-void testTr()
-{
-    Translator t;
-    string s = "Trcy oyc koon oz rweelycbb vmobcb, wyogrcn oecyb;";
-    cerr << t.getTranslation(s) << endl;
-    t.pushMapping("rweelycbb", "battiness");
-    assert(!t.pushMapping("oz", "oe"));
-    cerr << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
-    cerr << t.getTranslation(s) << endl;
-    t.popMapping();
-    cerr << t.getTranslation(s) << endl;
-}
+//void testTr()
+//{
+//    Translator t;
+//    string s = "Trcy oyc koon oz rweelycbb vmobcb, wyogrcn oecyb;";
+//    cerr << t.getTranslation(s) << endl;
+//    t.pushMapping("rweelycbb", "battiness");
+//    assert(!t.pushMapping("oz", "oe"));
+//    cerr << t.getTranslation("ABCDEFGHIJKLMNOPQRSTUVWXYZ") << endl;
+//    cerr << t.getTranslation(s) << endl;
+//    t.popMapping();
+//    cerr << t.getTranslation(s) << endl;
+//}
 
 //int main()
 //{

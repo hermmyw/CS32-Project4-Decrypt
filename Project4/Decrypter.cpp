@@ -2,8 +2,6 @@
 #include "MyHash.h"
 #include <string>
 #include <vector>
-#include <algorithm>
-#include <iostream>
 using namespace std;
 
 class DecrypterImpl
@@ -15,14 +13,12 @@ public:
     vector<string> crack(const string& ciphertext);
 private:
     WordList* m_wordList;
-    MyHash<string, bool> m_visited;
     void crackHelper(const string& ciphertext, Translator& t, vector<string>& output);
     bool fullyTranslated(const string& s) const;
     bool completeMessage(const string& message) const;
 };
 
 DecrypterImpl::DecrypterImpl()
-:m_visited(0.5)
 {
     m_wordList = new WordList;
 }
@@ -40,10 +36,8 @@ vector<string> DecrypterImpl::crack(const string& ciphertext)
 {
     Translator t;
     vector<string> output;
-    Tokenizer token(",;:.!()[]{}-\"#$%^& ");
+    Tokenizer token("0123456789,;:.!()[]{}-\"#$%^& ");
     vector<string> cipherWords = token.tokenize(ciphertext);
-    for (int i = 0; i < cipherWords.size(); i++)
-        m_visited.associate((cipherWords[i]), false);
     
     crackHelper(ciphertext, t, output);
     
@@ -64,6 +58,7 @@ vector<string> DecrypterImpl::crack(const string& ciphertext)
 
 void DecrypterImpl::crackHelper(const string& ciphertext, Translator& t, vector<string>& output)
 {
+    cerr << "Enter helper" << endl;
     // 0. Base case
     if (ciphertext.size() == 0)
         return;
@@ -95,6 +90,9 @@ void DecrypterImpl::crackHelper(const string& ciphertext, Translator& t, vector<
             maxLength = size;
         }
     }
+    
+    if (words.size() == 0 || partialTrans.size() == 0)
+        return;
     string w = words[index];
     string currTr = partialTrans[index];
    
@@ -128,13 +126,16 @@ void DecrypterImpl::crackHelper(const string& ciphertext, Translator& t, vector<
             }
         }
         if (!temp.pushMapping(ct, plaintext))
+        {
+            cerr << "Temp mapping should be empty." << endl;
             exit(1);
+        }
         if (!temp.pushMapping(w, candidates[i]))
             continue;
         
         // 6b. Translate the ciphertext
         translation = temp.getTranslation(ciphertext);
-        Tokenizer token(",;:.!()[]{}-\"#$%^& ");
+        Tokenizer token("0123456789,;:.!()[]{}-\"#$%^& ");
         vector<string> message = token.tokenize(translation);
         
         // 6c. Evaluate
@@ -219,7 +220,7 @@ vector<string> Decrypter::crack(const string& ciphertext)
    return m_impl->crack(ciphertext);
 }
 
-
+//
 const string FILENAME = "/Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/wordlist.txt";
 
 void testDe()
@@ -229,28 +230,34 @@ void testDe()
     vector<string> s0 = d.crack("Jxwpjq qwrla glcu pcx qcn xkvv dw uclw ekarbbckpjwe dq jzw jzkpta jzrj qcn ekep'j ec jzrp dq jzw cpwa qcn eke ec. -Urls Jxrkp");
     for (int i = 0; i < s0.size(); i++)
         cerr << "Output: " << s0[i] << endl;
-    vector<string> s1 = d.crack("Xjzwq gjz cuvq xz huri arwqvudiy fuk ufjrqoq svquxiy. -Lzjk Nqkkqcy");
-    for (int i = 0; i < s1.size(); i++)
-        cerr << "Output: " << s1[i] << endl;
-    vector<string> s2 = d.crack("Trcy oyc koon oz rweelycbb vmobcb, wyogrcn oecyb; hjg ozgcy tc moox bo moya wg grc vmobck koon grwg tc ko yog bcc grc oyc trlvr rwb hccy oecyck zon jb. -Rcmcy Xcmmcn");
-    for (int i = 0; i < s2.size(); i++)
-        cerr << "Output: " << s2[i] << endl;
-    vector<string> s3 = d.crack("Axevfvu lvnelvp bxqp mvpprjv rgl bvoop Grnxvgkvuj dqupb jvbp buvrbvl be lqggvu.");
-    for (int i = 0; i < s3.size(); i++)
-        cerr << "Output: " << s3[i] << endl;
-    vector<string> s4 = d.crack("Lzdkgd dyrmjls shcg xdggkud fpm xd!!");
-    for (int i = 0; i < s4.size(); i++)
-        cerr << "Output: " << s4[i] << endl;
-    vector<string> s5 = d.crack("Ojvgtv vcrpxok kfwt uvttgiv byp uv!!");
-    for (int i = 0; i < s5.size(); i++)
-        cerr << "Output: " << s5[i] << endl;
-    vector<string> s6 = d.crack("y qook ra bdttook yqkook.");
-    for (int i = 0; i < s6.size(); i++)
-        cerr << "Output: " << s6[i] << endl;
-    
+//    vector<string> s1 = d.crack("Xjzwq gjz cuvq xz huri arwqvudiy fuk ufjrqoq svquxiy. -Lzjk Nqkkqcy");
+//    for (int i = 0; i < s1.size(); i++)
+//        cerr << "Output: " << s1[i] << endl;
+//    vector<string> s2 = d.crack("Trcy oyc koon oz rweelycbb vmobcb, wyogrcn oecyb; hjg ozgcy tc moox bo moya wg grc vmobck koon grwg tc ko yog bcc grc oyc trlvr rwb hccy oecyck zon jb. -Rcmcy Xcmmcn");
+//    for (int i = 0; i < s2.size(); i++)
+//        cerr << "Output: " << s2[i] << endl;
+//    vector<string> s3 = d.crack("Axevfvu lvnelvp bxqp mvpprjv rgl bvoop Grnxvgkvuj dqupb jvbp buvrbvl be lqggvu.");
+//    for (int i = 0; i < s3.size(); i++)
+//        cerr << "Output: " << s3[i] << endl;
+//    vector<string> s4 = d.crack("Lzdkgd dyrmjls shcg xdggkud fpm xd!!");
+//    for (int i = 0; i < s4.size(); i++)
+//        cerr << "Output: " << s4[i] << endl;
+//    vector<string> s5 = d.crack("Ojvgtv vcrpxok kfwt uvttgiv byp uv!!");
+//    for (int i = 0; i < s5.size(); i++)
+//        cerr << "Output: " << s5[i] << endl;
+//    vector<string> s6 = d.crack("y qook ra bdttook yqkook.");
+//    for (int i = 0; i < s6.size(); i++)
+//        cerr << "Output: " << s6[i] << endl;
+//    vector<string> s7 = d.crack("%%%%%352716391*^(@@%");
+//    for (int i = 0; i < s7.size(); i++)
+//        cerr << "Output: " << s7[i] << endl;
+//    vector<string> s8 = d.crack("?");
+//    for (int i = 0; i < s8.size(); i++)
+//        cerr << "Output: " << s8[i] << endl;
+
 
 }
-//
+
 //int main()
 //{
 //    testDe();

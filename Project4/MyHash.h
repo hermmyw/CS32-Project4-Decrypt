@@ -60,9 +60,7 @@ MyHash<KeyType, ValueType>::MyHash(double maxLoadFactor)
         m_maxLF = 2.0;
     m_buckets = new Node*[NUM_BUCK];
     for (int i = 0; i < NUM_BUCK; i++)
-    {
         m_buckets[i] = nullptr;
-    }
 }
 
 template<typename KeyType, typename ValueType>
@@ -143,9 +141,7 @@ void MyHash<KeyType, ValueType>::associate(const KeyType& key, const ValueType& 
         }
     }
     if (getLoadFactor() >= 0.5)
-    {
         resizeArray();
-    }
 }
 
 template <class KeyType, class ValueType>
@@ -153,7 +149,6 @@ void MyHash<KeyType, ValueType>::resizeArray()
 {
     // cerr << "******RESIZING*******" << endl;
     m_size *= 2;
-    cerr << m_size << endl;
     Node** newArray = new Node*[m_size];
     for (int i = 0; i < m_size; i++)
         newArray[i] = nullptr;

@@ -3,10 +3,7 @@
 #include <string>
 #include <vector>
 #include <functional>
-#include <algorithm>
 #include <fstream>
-#include <iostream>
-#include <cassert>
 using namespace std;
 
 class WordListImpl
@@ -18,6 +15,7 @@ public:
     vector<string> findCandidates(string cipherWord, string currTranslation) const;
 private:
     MyHash<string, vector<string>> m_wordPatternList;
+    MyHash<string, string> m_words;
     string pattern(const string& s) const;
     void lowerCase(string& s) const;
 };
@@ -30,42 +28,33 @@ bool WordListImpl::loadWordList(string filename)
 {
     if (m_wordPatternList.getNumItems() != 0)
         m_wordPatternList.reset();
+    
     ifstream infile(filename);
     if(!infile)
         return false;
-    
     string s;
     while (getline(infile, s))
     {
         lowerCase(s);
         string p = pattern(s);
-        
+        m_words.associate(s, p);
         if (m_wordPatternList.find(p) == nullptr)
         {
             vector<string> wordsWithSamePattern;
             wordsWithSamePattern.push_back(s);
-            // cerr << "Pushed a new pattern: " << s << endl;
             m_wordPatternList.associate(p, wordsWithSamePattern);
         }
         else
-        {
-            // cerr << "Add to the pattern " << p << " with " << s << endl;
             (*m_wordPatternList.find(p)).push_back(s);
-        }
     }
     return true;
-    
 }
 
 bool WordListImpl::contains(string word) const
 {
     lowerCase(word);
-    string p = pattern(word);
-    vector<string> const* wordsPtr = m_wordPatternList.find(p);
-    if (wordsPtr != nullptr)
-        for (vector<string>::const_iterator p = (*wordsPtr).begin(); p != (*wordsPtr).end(); p++)
-            if (*p == word)
-                return true;
+    if (m_words.find(word) != nullptr)
+        return true;
     return false;
 }
 
@@ -73,27 +62,13 @@ vector<string> WordListImpl::findCandidates(string cipherWord, string currTransl
 {
     if (cipherWord.size() != currTranslation.size())
         return vector<string> ();
+    
     for (int i = 0; i < cipherWord.size(); i++)
     {
         if (cipherWord[i] != '\'' && !isalpha(cipherWord[i]))
             return vector<string> ();
         if (currTranslation[i] != '?' && currTranslation[i] != '\'' && !isalpha(currTranslation[i]))
             return vector<string> ();
-    }
-    
-    lowerCase(cipherWord);
-    lowerCase(currTranslation);
-    vector<string> candidates;
-    vector<string> potentialCand;
-    string p;
-    p = pattern(cipherWord);
-    vector<string> const* vsp = m_wordPatternList.find(p);
-    if (vsp != nullptr)
-        for (int i = 0; i < (*vsp).size(); i++)
-            potentialCand.push_back((*vsp)[i]);
-    
-    for (int i = 0; i < currTranslation.size(); i++)
-    {
         if (isalpha(currTranslation[i]) && !isalpha(cipherWord[i]))
             return vector<string>();
         if (currTranslation[i] == '?' && !isalpha(cipherWord[i]))
@@ -102,23 +77,29 @@ vector<string> WordListImpl::findCandidates(string cipherWord, string currTransl
             return vector<string>();
     }
     
-    for (int i = 0; i < potentialCand.size(); i++)
+    lowerCase(cipherWord);
+    lowerCase(currTranslation);
+    vector<string> candidates;
+    string p = pattern(cipherWord);
+    vector<string> const* vsp = m_wordPatternList.find(p);
+    if (vsp != nullptr)
     {
-        bool isCand = true;
-        if (potentialCand[i].size() != currTranslation.size())
-            isCand = false;
-        for (int j = 0; j < currTranslation.size(); j++)
+        for (int i = 0; i < (*vsp).size(); i++)
         {
-            if (isalpha(currTranslation[j]) && currTranslation[j] != potentialCand[i][j])
+            bool isCand = true;
+            if ((*vsp)[i].size() != currTranslation.size())
                 isCand = false;
-            else if (currTranslation[j] == '?' && !isalpha(potentialCand[i][j]))
-                isCand = false;
-            else if (currTranslation[j] == '\'' && currTranslation[j] != potentialCand[i][j])
-                isCand = false;
-        }
-        if (isCand)
-        {
-            candidates.push_back(potentialCand[i]);
+            for (int j = 0; j < currTranslation.size(); j++)
+            {
+                if (isalpha(currTranslation[j]) && currTranslation[j] != (*vsp)[i][j])
+                    isCand = false;
+                else if (currTranslation[j] == '?' && !isalpha((*vsp)[i][j]))
+                    isCand = false;
+                else if (currTranslation[j] == '\'' && currTranslation[j] != (*vsp)[i][j])
+                    isCand = false;
+            }
+            if (isCand)
+                candidates.push_back((*vsp)[i]);
         }
     }
     return candidates;
@@ -139,10 +120,8 @@ string WordListImpl::pattern(const string& s) const
         {
             pattern[i] = 'a' + j;
             for (k = i + 1; k < s.size(); k++)
-            {
                 if (s[i] == s[k])
                     pattern[k] = pattern[i];
-            }
             j++;
         }
     }
@@ -152,10 +131,8 @@ string WordListImpl::pattern(const string& s) const
 void WordListImpl::lowerCase(string &s) const
 {
     for (int i = 0; i < s.size(); i++)
-    {
         if (isalpha(s[i]))
             s[i] = tolower(s[i]);
-    }
 }
 
 //***** hash functions for string, int, and char *****
@@ -204,26 +181,26 @@ vector<string> WordList::findCandidates(string cipherWord, string currTranslatio
 {
    return m_impl->findCandidates(cipherWord, currTranslation);
 }
-
-
-
-const string FILENAME = "/Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/wordlist.txt";
-void testwl()
-{
-    WordList w;
-    w.loadWordList(FILENAME);
-    assert(w.contains("academicianship"));
-    assert(w.contains("'n'"));
-    assert(w.contains("'em"));
-    assert(w.contains("sinuateS"));
-    assert(!w.contains("csdjhwdc"));
-    assert(!w.contains("dasc"));
-    assert(!w.contains("vrwjy"));
-    vector<string> cand = w.findCandidates("bdttook", "???????");
-    for (int i = 0; i < cand.size(); i++)
-        cerr << cand[i] << endl;
-}
-
+//
+//
+//
+//const string FILENAME = "/Users/hermmy/Documents/2017-2018/CS32/Project4/Project4/wordlist.txt";
+//void testwl()
+//{
+//    WordList w;
+//    w.loadWordList(FILENAME);
+//    assert(w.contains("academicianship"));
+//    assert(w.contains("'n'"));
+//    assert(w.contains("'em"));
+//    assert(w.contains("sinuateS"));
+//    assert(!w.contains("csdjhwdc"));
+//    assert(!w.contains("dasc"));
+//    assert(!w.contains("vrwjy"));
+//    vector<string> cand = w.findCandidates("bdttook", "???????");
+//    for (int i = 0; i < cand.size(); i++)
+//        cerr << cand[i] << endl;
+//}
+//
 //int main()
 //{
 //    testwl();
